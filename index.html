@@ -8,8 +8,93 @@
 <meta name="theme-color" content="#141413">
 
 <!-- Ícone do App na tela inicial do iPhone e Android -->
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Crect width='240' height='240' rx='54' fill='%23141413'/%3E%3Cg transform='translate(0, 55)'%3E%3Cpath d='M22 12 H44 V46 C54 38 68 35 86 35 H96 L87 57 H68 C51 57 42 66 42 79 C42 92 51 101 69 101 L61 121 C36 120 22 103 22 78 Z' fill='%23ffffff'/%3E%3Cpolygon points='87,57 121,57 104,101 69,101' fill='%23ffffff'/%3E%3Cpath d='M129 36 C152 38 168 49 175 66 L180 42 H200 L214 93 L228 12 H248 L223 121 H203 L188 73 L175 121 H156 L163 95 C156 111 140 121 116 121 H96 L104 101 H120 C138 101 149 92 149 79 C149 66 138 57 121 57 Z' fill='%23ffffff'/%3E%3C/g%3E%3C/svg%3E">
+<!-- ====================================================================== -->
+<!-- FAVICON (icon-five.png) + ÍCONE DO APP WEB (icone-app.png) ARREDONDADOS -->
+<!-- ====================================================================== -->
+<link id="dynamicFavicon" rel="icon" type="image/png" href="icon-five.png">
+<link id="dynamicShortcutIcon" rel="shortcut icon" type="image/png" href="icon-five.png">
+<link id="dynamicAppleIcon" rel="apple-touch-icon" href="icone-app.png">
 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BOW Studio">
+<meta name="theme-color" content="#141413">
+
+<script>
+// Arredonda levemente os cantos das duas imagens automaticamente e configura o instalador do App (PWA)
+(function() {
+  function makeRoundedIcon(srcUrl, size, cornerRadius) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        // Cria a máscara com cantos levemente arredondados
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(0, 0, size, size, cornerRadius);
+        } else {
+          ctx.moveTo(cornerRadius, 0);
+          ctx.lineTo(size - cornerRadius, 0);
+          ctx.quadraticCurveTo(size, 0, size, cornerRadius);
+          ctx.lineTo(size, size - cornerRadius);
+          ctx.quadraticCurveTo(size, size, size - cornerRadius, size);
+          ctx.lineTo(cornerRadius, size);
+          ctx.quadraticCurveTo(0, size, 0, size - cornerRadius);
+          ctx.lineTo(0, cornerRadius);
+          ctx.quadraticCurveTo(0, 0, cornerRadius, 0);
+        }
+        ctx.closePath();
+        ctx.clip();
+
+        ctx.drawImage(img, 0, 0, size, size);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = () => resolve(srcUrl); // Fallback caso ainda esteja carregando
+      img.src = srcUrl;
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    // 1. Aplica cantos arredondados na imagem "icon-five.png" (Favicon da aba do site)
+    const roundedFavicon = await makeRoundedIcon('icon-five.png', 192, 40);
+    document.getElementById('dynamicFavicon').href = roundedFavicon;
+    document.getElementById('dynamicShortcutIcon').href = roundedFavicon;
+
+    // 2. Aplica cantos arredondados na imagem "icone-app.png" (Ícone de instalar o App Web)
+    const roundedAppIcon192 = await makeRoundedIcon('icone-app.png', 192, 42);
+    const roundedAppIcon512 = await makeRoundedIcon('icone-app.png', 512, 112);
+    document.getElementById('dynamicAppleIcon').href = roundedAppIcon512;
+
+    // 3. Cria o Manifesto de Instalação do Web App (Android, iOS e Desktop Chrome/Edge)
+    const manifest = {
+      name: "BOW STUDIO — Gestão Criativa",
+      short_name: "BOW Studio",
+      description: "Sistema de Gestão Criativa e Financeira BOW STUDIO",
+      start_url: window.location.origin + window.location.pathname,
+      display: "standalone",
+      background_color: "#141413",
+      theme_color: "#141413",
+      orientation: "portrait-primary",
+      icons: [
+        { src: roundedAppIcon192, sizes: "192x192", type: "image/png", purpose: "any" },
+        { src: roundedAppIcon512, sizes: "512x512", type: "image/png", purpose: "any" }
+      ]
+    };
+
+    const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    const manifestLink = document.createElement('link');
+    manifestLink.rel = 'manifest';
+    manifestLink.href = URL.createObjectURL(manifestBlob);
+    document.head.appendChild(manifestLink);
+  });
+})();
+</script>
 <script>
 // Gera o Manifesto PWA dinamicamente e ativa o botão de instalar no App
 (function() {
