@@ -2021,7 +2021,7 @@ async function downloadInvoiceA4Pdf(){
 }
 
 function closeInvoiceModal(){ document.getElementById('invoiceModalBackdrop').classList.remove('open'); }
-document.getElementById('invoiceModalBackdrop').addEventListener('click', e => { if(e.target.id === 'invoiceModalBackdrop') closeInvoiceModal(); }); <script>
+document.getElementById('invoiceModalBackdrop').addEventListener('click', e => { if(e.target.id === 'invoiceModalBackdrop') closeInvoiceModal(); }); 
 async function clearPartnerLegacyValue(partnerId){
   const p = (db.partners || []).find(x => Number(x.id) === Number(partnerId));
   if(!p) return;
