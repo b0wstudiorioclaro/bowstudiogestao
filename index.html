@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>BOW STUDIO — Gestão Criativa</title>
 
-<!-- FAVICON + ÍCONE DO APP WEB 3D GLASS EMBUTIDOS EM BASE64 (CANTOS ARREDONDADOS) -->
+<!-- 1. CONEXÃO COM O MANIFESTO FÍSICO E SERVICE WORKER (REMOVE O SELO DO CHROME) -->
+<link rel="manifest" href="./manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+
+<!-- 2. FAVICON E ÍCONES COM CANTOS ARREDONDADOS -->
 <link id="dynamicFavicon" rel="icon" type="image/png">
 <link id="dynamicShortcutIcon" rel="shortcut icon" type="image/png">
 <link id="dynamicAppleIcon" rel="apple-touch-icon">
@@ -90,30 +100,10 @@
 
   window.addEventListener('DOMContentLoaded', async () => {
     const faviconPng64 = await svgToPngBase64(faviconSvg, 192);
-    const appIcon192 = await svgToPngBase64(appGlassSvg, 192);
     const appIcon512 = await svgToPngBase64(appGlassSvg, 512);
     document.getElementById('dynamicFavicon').href = faviconPng64;
     document.getElementById('dynamicShortcutIcon').href = faviconPng64;
     document.getElementById('dynamicAppleIcon').href = appIcon512;
-
-    const manifest = {
-      name: "BOW STUDIO — Gestão Criativa",
-      short_name: "BOW Studio",
-      description: "Sistema de Gestão Criativa e Financeira BOW STUDIO",
-      start_url: window.location.origin + window.location.pathname,
-      display: "standalone",
-      background_color: "#141413",
-      theme_color: "#141413",
-      orientation: "portrait-primary",
-      icons: [
-        { src: appIcon192, sizes: "192x192", type: "image/png", purpose: "any" },
-        { src: appIcon512, sizes: "512x512", type: "image/png", purpose: "any" }
-      ]
-    };
-    const link = document.createElement('link');
-    link.rel = 'manifest';
-    link.href = 'data:application/manifest+json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(manifest))));
-    document.head.appendChild(link);
   });
 })();
 </script>
