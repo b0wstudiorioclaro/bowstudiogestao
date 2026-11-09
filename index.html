@@ -5,107 +5,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>BOW STUDIO — Gestão Criativa</title>
 
-<!-- 1. CONEXÃO COM O MANIFESTO FÍSICO E SERVICE WORKER (REMOVE O SELO DO CHROME) -->
+<!-- 1. MANIFESTO E ÍCONE OFICIAL GLASS (icone-app.jpg) -->
 <link rel="manifest" href="./manifest.json">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    });
-  }
-</script>
-
-<!-- 2. FAVICON E ÍCONES COM CANTOS ARREDONDADOS -->
-<link id="dynamicFavicon" rel="icon" type="image/png">
-<link id="dynamicShortcutIcon" rel="shortcut icon" type="image/png">
-<link id="dynamicAppleIcon" rel="apple-touch-icon">
+<link rel="apple-touch-icon" href="./icone-app.jpg">
+<link id="dynamicFavicon" rel="icon" type="image/jpeg" href="./icone-app.jpg">
+<link id="dynamicShortcutIcon" rel="shortcut icon" type="image/jpeg" href="./icone-app.jpg">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BOW Studio">
-<meta name="theme-color" content="#141413">
+<meta name="theme-color" content="#000000">
 
 <script>
-(function() {
-  const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-    <rect width="512" height="512" rx="108" fill="#050505"/>
-    <g transform="translate(54, 152) scale(1.58)">
-      <path d="M14 8 H38 V44 C49 35 65 32 85 32 H97 L87 56 H66 C47 56 38 66 38 80 C38 94 47 103 67 103 L58 124 C30 123 14 105 14 79 Z" fill="#FFFFFF"/>
-      <polygon points="87,56 123,56 105,103 67,103" fill="#FFFFFF"/>
-      <path d="M132 33 C156 35 173 47 180 65 L186 39 H207 L222 93 L236 8 H254 L229 124 H208 L193 74 L179 124 H159 L167 96 C159 113 142 124 117 124 H96 L105 103 H122 C141 103 153 94 153 80 C153 66 141 56 123 56 Z" fill="#FFFFFF"/>
-    </g>
-  </svg>`;
-
-  const appGlassSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-    <defs>
-      <linearGradient id="bgGlass" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#1a1a1c"/>
-        <stop offset="45%" stop-color="#050506"/>
-        <stop offset="100%" stop-color="#000000"/>
-      </linearGradient>
-      <linearGradient id="topSheen" x1="0%" y1="0%" x2="35%" y2="85%">
-        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.52"/>
-        <stop offset="40%" stop-color="#ffffff" stop-opacity="0.14"/>
-        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-      </linearGradient>
-      <linearGradient id="rimStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
-        <stop offset="30%" stop-color="#77777e" stop-opacity="0.35"/>
-        <stop offset="70%" stop-color="#333338" stop-opacity="0.25"/>
-        <stop offset="100%" stop-color="#ffffff" stop-opacity="0.65"/>
-      </linearGradient>
-      <radialGradient id="bottomGlow" cx="50%" cy="98%" r="48%">
-        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
-        <stop offset="60%" stop-color="#ffffff" stop-opacity="0.08"/>
-        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-      </radialGradient>
-      <clipPath id="squircleClip">
-        <rect x="8" y="8" width="496" height="496" rx="116"/>
-      </clipPath>
-    </defs>
-    <g clip-path="url(#squircleClip)">
-      <rect x="8" y="8" width="496" height="496" rx="116" fill="url(#bgGlass)"/>
-      <path d="M 8 8 H 430 C 310 120 190 250 8 390 Z" fill="url(#topSheen)"/>
-      <rect x="8" y="340" width="496" height="164" fill="url(#bottomGlow)"/>
-      <rect x="16" y="16" width="480" height="480" rx="108" fill="none" stroke="url(#rimStroke)" stroke-width="5"/>
-      <rect x="10" y="10" width="492" height="492" rx="114" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2"/>
-    </g>
-    <g transform="translate(56, 154) scale(1.56)">
-      <path d="M14 8 H38 V44 C49 35 65 32 85 32 H97 L87 56 H66 C47 56 38 66 38 80 C38 94 47 103 67 103 L58 124 C30 123 14 105 14 79 Z" fill="#FFFFFF"/>
-      <polygon points="87,56 123,56 105,103 67,103" fill="#FFFFFF"/>
-      <path d="M132 33 C156 35 173 47 180 65 L186 39 H207 L222 93 L236 8 H254 L229 124 H208 L193 74 L179 124 H159 L167 96 C159 113 142 124 117 124 H96 L105 103 H122 C141 103 153 94 153 80 C153 66 141 56 123 56 Z" fill="#FFFFFF"/>
-    </g>
-  </svg>`;
-
-  function svgToPngBase64(svgText, size) {
-    return new Promise((resolve) => {
-      const img = new Image();
-      const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgText)));
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = size;
-        canvas.height = size;
-        canvas.getContext('2d').drawImage(img, 0, 0, size, size);
-        resolve(canvas.toDataURL('image/png'));
-      };
-      img.onerror = () => resolve(svgBase64);
-      img.src = svgBase64;
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js');
     });
   }
 
-  const favInitial = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(faviconSvg)));
-  document.getElementById('dynamicFavicon').href = favInitial;
-  document.getElementById('dynamicShortcutIcon').href = favInitial;
+  let deferredPwaPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
 
-  window.addEventListener('DOMContentLoaded', async () => {
-    const faviconPng64 = await svgToPngBase64(faviconSvg, 192);
-    const appIcon512 = await svgToPngBase64(appGlassSvg, 512);
-    document.getElementById('dynamicFavicon').href = faviconPng64;
-    document.getElementById('dynamicShortcutIcon').href = faviconPng64;
-    document.getElementById('dynamicAppleIcon').href = appIcon512;
+    if (!document.getElementById('pwaInstallBanner')) {
+      const bar = document.createElement('div');
+      bar.id = 'pwaInstallBanner';
+      bar.style.cssText = 'background:#141413;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #333;font-size:12px;font-weight:600;z-index:999;';
+      bar.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px">
+          <img src="./icone-app.jpg" style="width:32px;height:32px;border-radius:8px;object-fit:cover">
+          <span>Instale o aplicativo oficial <b>BOW Studio</b> no seu celular</span>
+        </div>
+        <button id="btnTriggerPwaInstall" style="background:#fff;color:#141413;border:0;padding:7px 14px;border-radius:8px;font-weight:700;cursor:pointer">Instalar App</button>
+      `;
+      document.body.prepend(bar);
+
+      document.getElementById('btnTriggerPwaInstall').onclick = async () => {
+        if (!deferredPwaPrompt) return;
+        deferredPwaPrompt.prompt();
+        const { outcome } = await deferredPwaPrompt.userChoice;
+        if (outcome === 'accepted') bar.remove();
+        deferredPwaPrompt = null;
+      };
+    }
   });
-})();
 </script>
 
 <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
