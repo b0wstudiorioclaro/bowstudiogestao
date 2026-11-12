@@ -371,6 +371,42 @@ td:first-child, th:first-child { padding-left: 0; }
 #pwaInstallBanner #btnDismissPwaInstall { background: transparent; color: #fff; font-size: 24px; min-width: 36px; padding: 4px; }
 #pwaInstallBanner button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 @media (max-width: 420px) { #pwaInstallBanner { left: 8px; right: 8px; gap: 8px; padding: 10px; font-size: 12px; } #pwaInstallBanner img { width: 32px; height: 32px; } }
+
+/* Financeiro: totais gerais e consulta mensal independente. */
+#view-dashboard > .stats .stat-top { gap: 8px; }
+#view-dashboard > .stats .stat-value { font-size: clamp(18px, 1.65vw, 24px); overflow-wrap: anywhere; }
+.expense-breakdown { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 7px; font-size: 11px; line-height: 1.5; color: var(--muted); }
+.expense-breakdown .pending-expense { color: var(--red); }
+.dashboard-month-summary { border: 1px solid var(--line); border-radius: 20px; padding: 20px; margin-bottom: 22px; background: var(--panel); }
+.dashboard-month-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.dashboard-month-header h2 { font-size: 17px; margin: 0; }
+.dashboard-month-header p { font-size: 12px; margin: 5px 0 0; color: var(--muted); }
+.dashboard-month-controls { display: flex; align-items: center; gap: 6px; max-width: 100%; }
+.dashboard-month-controls button, .dashboard-month-controls input { min-height: 40px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: #fff; }
+.dashboard-month-controls input { width: 180px; min-width: 0; padding: 8px 10px; font-size: 13px; font-weight: 600; font-family: inherit; }
+.dashboard-month-controls .month-arrow { display: grid; place-items: center; width: 40px; flex-shrink: 0; padding: 0; }
+.dashboard-month-controls .month-today { background: var(--brand); color: #fff; border-color: var(--brand); padding: 8px 12px; white-space: nowrap; font-size: 12px; font-weight: 600; }
+.dashboard-month-controls button:hover { filter: brightness(.95); }
+.dashboard-month-controls button:disabled { opacity: .4; cursor: default; }
+.dashboard-month-controls :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.dashboard-month-caption { margin: 18px 0 12px; font-weight: 600; font-size: 14px; }
+.dashboard-month-cards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.dashboard-month-cards .stat { background: #fff; box-shadow: none; }
+.month-receivable .stat-value { color: var(--green); }
+.month-receivable .stat-icon { color: var(--green); background: #e8f5ee; }
+.month-expenses .stat-value { color: var(--red); }
+.month-expenses .stat-icon { color: var(--red); background: #fbecef; }
+.dashboard-date-note { color: var(--muted); font-size: 11px; margin: 12px 0 0; }
+@media(max-width:600px) {
+  .dashboard-month-summary { padding: 14px; border-radius: 16px; }
+  .dashboard-month-header { gap: 14px; }
+  .dashboard-month-controls { width: 100%; flex-wrap: wrap; }
+  .dashboard-month-controls input { flex: 1; width: 120px; }
+  .dashboard-month-controls .month-today { width: 100%; }
+  .dashboard-month-cards { grid-template-columns: 1fr; gap: 10px; }
+  .dashboard-month-cards .stat-value { font-size: 26px; }
+  #view-dashboard > .stats .stat-value { font-size: 20px; }
+}
 </style>
 </head> <body>
 
@@ -461,7 +497,7 @@ td:first-child, th:first-child { padding-left: 0; }
 <section class="section-view active" id="view-dashboard">
   <div class="stats">
     <article class="stat highlight-cash" style="cursor:pointer" data-goto="cash">
-      <div class="stat-top">Caixa Geral (Saldo Real) <span class="stat-icon">&#x25C8;&#xFE0E;</span></div>
+      <div class="stat-top">Saldo Atual <span class="stat-icon">&#x25C8;&#xFE0E;</span></div>
       <div class="stat-value" id="statCash">R$ 0,00</div>
       <div class="stat-foot">Apenas valores pagos/recebidos</div>
     </article>
@@ -471,14 +507,15 @@ td:first-child, th:first-child { padding-left: 0; }
       <div class="stat-foot"><strong id="statActiveContracts">0</strong> clientes ativos</div>
     </article>
     <article class="stat" style="cursor:pointer" data-goto="receivables">
-      <div class="stat-top">Pendente a Receber <span class="stat-icon">&#x25F7;&#xFE0E;</span></div>
+      <div class="stat-top">A Receber · Total <span class="stat-icon">&#x25F7;&#xFE0E;</span></div>
       <div class="stat-value" id="statPending">R$ 0,00</div>
-      <div class="stat-foot">Entra no caixa ao receber</div>
+      <div class="stat-foot">Pendentes de todos os meses</div>
     </article>
     <article class="stat" style="cursor:pointer" data-goto="expenses">
-      <div class="stat-top">Contas a Pagar <span class="stat-icon">&#x2198;&#xFE0E;</span></div>
-      <div class="stat-value" id="statExpensesPending">R$ 0,00</div>
-      <div class="stat-foot" id="statExpensesPaidFoot">R$ 0,00 já pagos</div>
+      <div class="stat-top">Despesas · Total <span class="stat-icon">&#x2198;&#xFE0E;</span></div>
+      <div class="stat-value" id="statExpensesTotal">R$ 0,00</div>
+      <div class="stat-foot">Pagas + pendentes · todos os meses</div>
+      <div class="stat-foot expense-breakdown" id="statExpensesPaidFoot"></div>
     </article>
     <article class="stat" style="cursor:pointer" data-goto="services">
       <div class="stat-top">Demandas Pendentes <span class="stat-icon">&#x2733;&#xFE0E;</span></div>
@@ -486,6 +523,40 @@ td:first-child, th:first-child { padding-left: 0; }
       <div class="stat-foot" id="statDemandAlert">0 atrasadas</div>
     </article>
   </div>
+
+  <section class="dashboard-month-summary" aria-labelledby="dashboardMonthTitle">
+    <div class="dashboard-month-header">
+      <div>
+        <h2 id="dashboardMonthTitle">Resumo do mês</h2>
+        <p>Valores por vencimento dos lançamentos cadastrados</p>
+      </div>
+      <div class="dashboard-month-controls" role="group" aria-label="Selecionar mês do resumo financeiro">
+        <button type="button" class="month-arrow" id="dashboardPrevMonth" aria-label="Mês anterior" onclick="changeDashboardFinancialMonth(-1)">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m14 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <input type="month" id="dashboardMonthInput" min="0001-01" max="9999-12" aria-label="Escolher mês do resumo" onchange="selectDashboardFinancialMonth(this.value)">
+        <button type="button" class="month-arrow" id="dashboardNextMonth" aria-label="Próximo mês" onclick="changeDashboardFinancialMonth(1)">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m10 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="month-today" onclick="resetDashboardFinancialMonth()">Mês atual</button>
+      </div>
+    </div>
+    <div class="dashboard-month-caption" id="dashboardMonthCaption" aria-live="polite"></div>
+    <div class="dashboard-month-cards">
+      <article class="stat month-receivable">
+        <div class="stat-top">A Receber no Mês <span class="stat-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><path d="m18 6-12 12M6 8v10h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="stat-value" id="statMonthReceivable">R$ 0,00</div>
+        <div class="stat-foot" id="statMonthReceivableFoot">Somente valores ainda pendentes</div>
+      </article>
+      <article class="stat month-expenses">
+        <div class="stat-top">Despesas do Mês <span class="stat-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 18 18 6M8 6h10v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="stat-value" id="statMonthExpenses">R$ 0,00</div>
+        <div class="stat-foot">Pagas + pendentes</div>
+        <div class="expense-breakdown" id="statMonthExpensesFoot"></div>
+      </article>
+    </div>
+    <p class="dashboard-date-note" id="dashboardUndatedNote" hidden></p>
+  </section>
 
   <div class="content-grid">
     <section class="panel">
@@ -1960,6 +2031,97 @@ function filterPartnerHistory(partnerName){
   renderPartnersDashboard(db.partners || [], db.expenses || []);
 }
 
+// BEGIN DASHBOARD FINANCIAL SUMMARY
+let dashboardFinancialMonth = null;
+function currentDashboardMonth(now = new Date()) {
+  return `${String(now.getFullYear()).padStart(4, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+function validDashboardMonth(month) {
+  return typeof month === 'string' && /^(?!0000)\d{4}-(0[1-9]|1[0-2])$/.test(month);
+}
+function dashboardDueMonth(due) {
+  if (typeof due !== 'string' || !/^(?!0000)\d{4}-(0[1-9]|1[0-2])-\d{2}$/.test(due)) return null;
+  const [year, month, day] = due.split('-').map(Number);
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return day >= 1 && day <= days[month - 1] ? due.slice(0, 7) : null;
+}
+function dashboardAmountCents(value) {
+  const amount = Number(value || 0);
+  return Number.isFinite(amount) ? Math.round(amount * 100) : 0;
+}
+function getDashboardFinancialSummary(incomes, expenses, month) {
+  const sum = { receivable: 0, expenses: 0, paidExpenses: 0, pendingExpenses: 0,
+    monthReceivable: 0, monthReceivableCount: 0, monthExpenses: 0,
+    monthPaidExpenses: 0, monthPendingExpenses: 0, undatedCount: 0 };
+  for (const item of incomes || []) {
+    if (!item || item.status === 'Recebido') continue;
+    const cents = dashboardAmountCents(item.value);
+    const dueMonth = dashboardDueMonth(item.due);
+    sum.receivable += cents;
+    if (!dueMonth) sum.undatedCount++;
+    if (validDashboardMonth(month) && dueMonth === month) {
+      sum.monthReceivable += cents;
+      sum.monthReceivableCount++;
+    }
+  }
+  for (const item of expenses || []) {
+    if (!item) continue;
+    const cents = dashboardAmountCents(item.value);
+    const paid = item.status === 'Pago';
+    const dueMonth = dashboardDueMonth(item.due);
+    sum.expenses += cents;
+    sum[paid ? 'paidExpenses' : 'pendingExpenses'] += cents;
+    if (!dueMonth) sum.undatedCount++;
+    if (validDashboardMonth(month) && dueMonth === month) {
+      sum.monthExpenses += cents;
+      sum[paid ? 'monthPaidExpenses' : 'monthPendingExpenses'] += cents;
+    }
+  }
+  for (const key of ['receivable', 'expenses', 'paidExpenses', 'pendingExpenses', 'monthReceivable', 'monthExpenses', 'monthPaidExpenses', 'monthPendingExpenses']) sum[key] /= 100;
+  return sum;
+}
+function renderDashboardFinancialSummary() {
+  const month = dashboardFinancialMonth || currentDashboardMonth();
+  const sum = getDashboardFinancialSummary(db.incomes, db.expenses, month);
+  const input = document.getElementById('dashboardMonthInput');
+  if (document.activeElement !== input) input.value = month;
+  const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const [year, monthNumber] = month.split('-');
+  document.getElementById('dashboardMonthCaption').textContent = `${monthNames[Number(monthNumber) - 1]} de ${year}${month === currentDashboardMonth() ? ' · mês atual' : ''}`;
+  document.getElementById('dashboardPrevMonth').disabled = month === '0001-01';
+  document.getElementById('dashboardNextMonth').disabled = month === '9999-12';
+  document.getElementById('statPending').textContent = money(sum.receivable);
+  document.getElementById('statExpensesTotal').textContent = money(sum.expenses);
+  document.getElementById('statExpensesPaidFoot').innerHTML = `<span>Pagas: ${money(sum.paidExpenses)}</span><span class="pending-expense">A pagar: ${money(sum.pendingExpenses)}</span>`;
+  document.getElementById('statMonthReceivable').textContent = money(sum.monthReceivable);
+  document.getElementById('statMonthReceivableFoot').textContent = sum.monthReceivableCount ? `${sum.monthReceivableCount} ${sum.monthReceivableCount === 1 ? 'conta pendente' : 'contas pendentes'} · inclui vencidas neste mês` : 'Nenhuma conta pendente neste mês';
+  document.getElementById('statMonthExpenses').textContent = money(sum.monthExpenses);
+  document.getElementById('statMonthExpensesFoot').innerHTML = `<span>Pagas: ${money(sum.monthPaidExpenses)}</span><span class="pending-expense">A pagar: ${money(sum.monthPendingExpenses)}</span>`;
+  const note = document.getElementById('dashboardUndatedNote');
+  note.hidden = !sum.undatedCount;
+  note.textContent = sum.undatedCount ? `${sum.undatedCount} lançamento(s) sem vencimento válido: incluídos nos totais gerais, fora do resumo mensal.` : '';
+}
+function selectDashboardFinancialMonth(month) {
+  if (validDashboardMonth(month)) dashboardFinancialMonth = month;
+  else document.getElementById('dashboardMonthInput').value = dashboardFinancialMonth || currentDashboardMonth();
+  renderDashboardFinancialSummary();
+}
+function changeDashboardFinancialMonth(offset) {
+  const [year, month] = (dashboardFinancialMonth || currentDashboardMonth()).split('-').map(Number);
+  const absoluteMonth = (year - 1) * 12 + month - 1 + offset;
+  if (!Number.isInteger(absoluteMonth) || absoluteMonth < 0 || absoluteMonth >= 9999 * 12) return;
+  dashboardFinancialMonth = `${String(Math.floor(absoluteMonth / 12) + 1).padStart(4, '0')}-${String(absoluteMonth % 12 + 1).padStart(2, '0')}`;
+  document.getElementById('dashboardMonthInput').value = dashboardFinancialMonth;
+  renderDashboardFinancialSummary();
+}
+function resetDashboardFinancialMonth() {
+  dashboardFinancialMonth = null;
+  document.getElementById('dashboardMonthInput').value = currentDashboardMonth();
+  renderDashboardFinancialSummary();
+}
+// END DASHBOARD FINANCIAL SUMMARY
+
 function render(){
   ensureTagsExtracted();
   ensureAllPartnersFromExpenses();
@@ -2000,9 +2162,7 @@ function render(){
   document.getElementById('clientCount').textContent = clients.length;
   document.getElementById('statActiveContracts').textContent = activeClients.length;
   document.getElementById('statRevenue').textContent = money(activeClients.reduce((a,c)=>a+Number(c.value||0),0));
-  document.getElementById('statPending').textContent = money(totalPendingIn);
-  document.getElementById('statExpensesPending').textContent = money(totalPendingExp);
-  document.getElementById('statExpensesPaidFoot').textContent = `${money(totalExpPaid + totalPartnersPaid)} já pagos no caixa`;
+  renderDashboardFinancialSummary();
 
   const pendingDemands = services.filter(s=>s.status!=='Concluído');
   const lateDemandsCount = pendingDemands.filter(s=>getDeadlineStatus(s.date, s.status).tag === 'late').length;
@@ -2943,4 +3103,5 @@ render();
 </script>
 </body>
 </html>
+
 
