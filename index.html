@@ -407,6 +407,118 @@ td:first-child, th:first-child { padding-left: 0; }
   .dashboard-month-cards .stat-value { font-size: 26px; }
   #view-dashboard > .stats .stat-value { font-size: 20px; }
 }
+/* Client project workspace */
+.pj-workspace { color:#191919; --pj-border:#e5e7eb; --pj-muted:#777b82; }
+.pj-breadcrumb { display:flex; gap:10px; align-items:center; font-size:12px; margin:4px 0 18px; }
+.pj-breadcrumb > button { border:0; background:none; color:#626670; padding:0; }
+.pj-breadcrumb .pj-actions { margin-left:auto; }
+.pj-layout { display:grid; grid-template-columns:minmax(0,1fr) 290px; gap:20px; align-items:start; }
+.pj-main,.pj-content { min-width:0; }
+.pj-card { background:#fff; border:1px solid var(--pj-border); border-radius:16px; padding:22px; }
+.pj-card h3 { display:flex; align-items:center; gap:9px; margin:0 0 18px; font-size:15px; }
+.pj-card h3 > span { margin-left:auto; color:var(--pj-muted); font:500 13px 'DM Sans',sans-serif; }
+.pj-identity { display:flex; gap:18px; align-items:flex-start; }
+.pj-client-logo { width:76px; height:76px; border-radius:17px; overflow:hidden; display:grid; place-items:center; background:#101010; color:#fff; flex-shrink:0; font-size:26px; font-weight:700; }
+.pj-client-logo img { width:100%; height:100%; object-fit:contain; background:#fff; padding:5px; }
+.pj-client-title { flex:1; min-width:0; }
+.pj-kicker { font-size:10px; padding:3px 7px; border-radius:5px; background:#f2f3f5; }
+.pj-client-title h2 { font-size:clamp(22px,2vw,30px); margin:8px 0 5px; line-height:1.15; overflow-wrap:anywhere; }
+.pj-client-title p { font-size:12px; line-height:1.5; margin:0; color:#60656c; }
+.pj-dates { display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:14px; font-size:11px; }
+.pj-dates span { display:inline-flex; align-items:center; gap:5px; }
+.pj-status { display:flex; align-items:center; gap:5px; font-size:10px; border:0; border-radius:7px; padding:8px; background:#f1f2f4; white-space:nowrap; }
+.pj-progress { margin-top:24px; padding-top:20px; border-top:1px solid var(--pj-border); display:flex; gap:18px; align-items:center; }
+.pj-progress > div:first-child { flex-shrink:0; }
+.pj-progress small { font-size:10px; display:block; margin-bottom:5px; }
+.pj-progress strong { font:700 32px 'Inter',sans-serif; letter-spacing:-1px; }
+.pj-progress > span { font-size:10px; color:#626670; }
+.pj-track { height:8px; background:#e4e5e7; border-radius:8px; overflow:hidden; flex:1; min-width:50px; }
+.pj-track span { display:block; height:100%; background:#141414; transition:width .2s; }
+.pj-tabs { display:flex; gap:5px; overflow-x:auto; margin:18px 0 14px; padding-bottom:4px; }
+.pj-tabs button { display:inline-flex; align-items:center; gap:7px; flex-shrink:0; white-space:nowrap; padding:10px 12px; font-size:11px; font-weight:600; border:0; background:transparent; border-radius:8px; color:#5d6269; }
+.pj-tabs button.active { background:#111; color:white; }
+.pj-button { display:inline-flex; justify-content:center; align-items:center; gap:6px; border:1px solid #e0e2e6; background:white; color:#262626; border-radius:8px; padding:8px 11px; min-height:34px; font-size:11px; font-weight:600; text-decoration:none; cursor:pointer; }
+.pj-primary { background:#131313; color:white; border-color:#131313; }
+.pj-danger { color:#b83242!important; }
+.pj-icon-button { display:inline-grid; place-items:center; min-width:32px; height:32px; background:transparent; border:1px solid transparent; border-radius:7px; color:#6b7077; padding:4px; }
+.pj-button:hover,.pj-icon-button:hover { filter:brightness(.94); }
+.pj-workspace button:focus-visible,.pj-workspace input:focus-visible,.pj-workspace select:focus-visible,.pj-workspace summary:focus-visible { outline:2px solid #686e7b; outline-offset:3px; }
+.pj-scope-tools { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+.pj-filter { display:flex; gap:4px; flex-wrap:wrap; }
+.pj-filter button { border:1px solid transparent; background:transparent; font-size:10px; color:#727780; border-radius:6px; padding:7px 8px; }
+.pj-filter button.active { background:#fff; color:#181818; border-color:#dedfe3; }
+.pj-search { display:flex; gap:10px; align-items:center; font-size:11px; color:var(--pj-muted); margin:0 0 12px; }
+.pj-search input { flex:1; min-width:0; border:1px solid var(--pj-border); background:#fff; padding:9px 12px; border-radius:8px; font-size:12px; }
+.pj-group { border:1px solid var(--pj-border); background:#fff; border-radius:12px; margin-bottom:8px; overflow:hidden; }
+.pj-group summary { cursor:pointer; display:flex; align-items:center; gap:10px; list-style:none; padding:13px 15px; font-size:13px; }
+.pj-group summary::-webkit-details-marker { display:none; }
+.pj-group summary strong { flex:1; min-width:0; overflow-wrap:anywhere; }
+.pj-group summary > svg:last-child { transition:transform .15s; }
+.pj-group[open] summary > svg:last-child { transform:rotate(180deg); }
+.pj-group-count { font-size:11px; color:#626670; }
+.pj-percent { border-radius:14px; background:#f0f1f3; text-align:center; min-width:55px; padding:3px 8px; font-size:10px; font-weight:700; }
+.pj-group-body { padding:0 15px 13px 41px; }
+.pj-group-tools { display:flex; gap:6px; flex-wrap:wrap; margin:3px 0 10px; }
+.pj-group-tools .pj-button { font-size:10px; min-height:28px; padding:4px 7px; border-color:#ededed; }
+.pj-task { display:flex; gap:9px; align-items:center; padding:7px 0; }
+.pj-task > input { width:15px; height:15px; accent-color:#111; flex-shrink:0; }
+.pj-task-name { border:0; background:none; color:#252525; text-align:left; padding:0; font-size:12px; flex:1; min-width:0; line-height:1.4; overflow-wrap:anywhere; }
+.pj-task-name small { display:block; color:#8b8e94; font-size:10px; margin-top:3px; }
+.pj-task.is-done .pj-task-name { text-decoration:line-through; color:#777; }
+.pj-task select { border:1px solid #e8e9eb; background:#f5f5f6; border-radius:7px; padding:4px 6px; width:115px; font-size:10px; }
+.pj-empty { padding:22px 8px; color:#858992; font-size:12px; line-height:1.6; }
+.pj-aside { display:grid; gap:16px; }
+.pj-summary { margin:0; }
+.pj-summary > div { display:flex; justify-content:space-between; border-top:1px solid #f0f1f3; padding:14px 0; font-size:12px; }
+.pj-summary dd { margin:0; font-weight:700; }
+.pj-summary > div:last-child { padding-bottom:0; }
+.pj-timeline { margin:3px 0 14px; }
+.pj-milestone { width:100%; display:flex; gap:10px; align-items:flex-start; border:0; padding:0 0 22px; background:none; position:relative; text-align:left; }
+.pj-milestone:before { content:''; position:absolute; top:17px; left:8px; width:1px; bottom:0; background:#dfe1e5; }
+.pj-milestone:last-child:before { display:none; }
+.pj-milestone-dot { width:17px; height:17px; border:1px solid #bdc2c9; background:#fff; border-radius:50%; flex-shrink:0; display:grid; place-items:center; }
+.pj-milestone-dot.done { background:#111; border-color:#111; color:#fff; }
+.pj-milestone-dot svg { width:11px; }
+.pj-milestone > span:nth-child(2) { flex:1; min-width:0; }
+.pj-milestone strong { display:block; font-size:11px; overflow-wrap:anywhere; }
+.pj-milestone small { display:block; font-size:9px; color:var(--pj-muted); margin-top:5px; }
+.pj-milestone em { font-style:normal; font-size:9px; border-radius:6px; background:#f1f2f3; padding:4px; }
+.pj-helper { color:var(--pj-muted); font-size:11px; line-height:1.6; }
+.pj-actions { display:flex; gap:7px; flex-wrap:wrap; }
+.pj-section-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+.pj-section-heading h3 { margin-bottom:5px; }
+.pj-section-heading p { margin:0; color:var(--pj-muted); font-size:11px; line-height:1.6; }
+.pj-calendar-tools { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:15px; }
+.pj-calendar-tools strong { font-size:13px; text-transform:capitalize; }
+.pj-bulk { margin-top:16px; font-size:12px; color:#686d76; }
+.pj-bulk summary { cursor:pointer; font-weight:600; }
+.pj-bulk textarea { width:100%; min-height:130px; padding:12px; border:1px solid #ddd; border-radius:10px; margin:10px 0; }
+.pj-resource { display:flex; align-items:center; gap:10px; border-top:1px solid var(--pj-border); padding:15px 0; }
+.pj-resource > div { flex:1; min-width:0; }
+.pj-resource strong { display:block; overflow-wrap:anywhere; font-size:12px; }
+.pj-resource small,.pj-person small { display:block; color:var(--pj-muted); font-size:10px; margin-top:4px; overflow-wrap:anywhere; }
+.pj-contract { border-top:1px solid var(--pj-border); margin-top:12px; padding-top:15px; font-size:12px; display:flex; justify-content:space-between; align-items:center; }
+.pj-team-grid { display:grid; gap:10px; }
+.pj-person { display:flex; gap:10px; align-items:center; border:1px solid var(--pj-border); padding:12px; border-radius:11px; }
+.pj-person > div { flex:1; min-width:0; }
+.pj-person strong { font-size:12px; overflow-wrap:anywhere; }
+.pj-avatar { width:37px; height:37px; border-radius:50%; display:grid; place-items:center; background:#eceef1; color:#424854; font-size:11px; font-weight:700; flex-shrink:0; }
+.pj-team-preview { display:flex; margin-bottom:15px; gap:6px; flex-wrap:wrap; }
+.pj-notes { white-space:pre-wrap; font-size:13px; line-height:1.8; overflow-wrap:anywhere; }
+#projectEditorDialog { width:min(600px,calc(100% - 28px)); max-height:90vh; border:1px solid #ddd; border-radius:18px; padding:24px; color:#191919; box-shadow:0 25px 100px #0004; }
+#projectEditorDialog::backdrop { background:#0006; backdrop-filter:blur(3px); }
+#projectEditorTitle { margin:0 0 22px; font-size:20px; }
+#projectEditorFields { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+.pj-field { display:flex; flex-direction:column; gap:7px; font-size:12px; min-width:0; }
+.pj-field input,.pj-field select,.pj-field textarea { width:100%; min-width:0; border:1px solid #dcdfe4; padding:10px 11px; border-radius:8px; background:#fff; color:#191919; font-size:13px; }
+.pj-field textarea { min-height:110px; resize:vertical; }
+.pj-full { grid-column:1/-1; }
+#projectEditorError { color:#b3283b; font-size:12px; }
+.pj-dialog-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:20px; }
+@media(max-width:1200px) { .pj-layout { grid-template-columns:minmax(0,1fr) 245px; gap:14px; } .pj-card { padding:18px; } .pj-identity { flex-wrap:wrap; } .pj-status { margin-left:auto; } .pj-progress { flex-wrap:wrap; } .pj-progress > span { width:100%; } }
+@media(max-width:1000px) { .pj-layout { grid-template-columns:minmax(0,1fr); } .pj-aside { grid-template-columns:1fr 1fr; } .pj-side-team { grid-column:1/-1; } }
+@media(max-width:600px) { .pj-breadcrumb { flex-wrap:wrap; } .pj-breadcrumb .pj-actions { width:100%; margin:4px 0 0; } .pj-hero { padding:16px; } .pj-client-logo { width:62px; height:62px; } .pj-identity { display:grid; grid-template-columns:62px minmax(0,1fr); gap:12px; } .pj-identity .pj-status { grid-column:1/-1; justify-self:end; margin-left:0; } .pj-client-title h2 { font-size:23px; } .pj-progress { gap:12px; margin-top:18px; padding-top:16px; } .pj-progress strong { font-size:30px; } .pj-aside { grid-template-columns:1fr; } .pj-task { flex-wrap:wrap; gap:8px; padding:9px 0; border-top:1px solid #f3f3f3; } .pj-task-name { flex-basis:calc(100% - 30px); } .pj-task select { margin-left:23px; width:140px; } .pj-group-body { padding:0 13px 12px; } .pj-group summary { gap:8px; padding:12px; font-size:12px; } .pj-percent { min-width:44px; } .pj-resource { flex-wrap:wrap; } .pj-resource > div { flex-basis:calc(100% - 35px); } .pj-person { flex-wrap:wrap; } .pj-tabs { margin-top:14px; } #projectEditorFields { grid-template-columns:1fr; } .pj-field { grid-column:1; } #projectEditorDialog { padding:18px; } }
+
 </style>
 </head> <body>
 
@@ -1076,6 +1188,9 @@ td:first-child, th:first-child { padding-left: 0; }
   </div>
 </div>
 
+<dialog id="projectEditorDialog" aria-labelledby="projectEditorTitle">
+<h2 id="projectEditorTitle">Editar projeto</h2><form id="projectEditorForm"><div id="projectEditorFields"></div><p id="projectEditorError" role="alert"></p><div class="pj-dialog-actions"><button type="button" class="pj-button" id="projectEditorCancel">Cancelar</button><button type="submit" class="pj-button pj-primary">Salvar</button></div></form>
+</dialog>
 <div class="toast" id="toast">Alteração salva!</div> <script>
 const DEFAULT_CLOUD_URL = "https://bow-studio-eebe2-default-rtdb.firebaseio.com";
 const DEFAULT_SYMBOL_SVG = `<svg viewBox="0 0 255 130" width="44" height="42" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 8 H38 V44 C49 35 65 32 85 32 H97 L87 56 H66 C47 56 38 66 38 80 C38 94 47 103 67 103 L58 124 C30 123 14 105 14 79 Z" fill="#161614"/><polygon points="87,56 123,56 105,103 67,103" fill="#161614"/><path d="M132 33 C156 35 173 47 180 65 L186 39 H207 L222 93 L236 8 H254 L229 124 H208 L193 74 L179 124 H159 L167 96 C159 113 142 124 117 124 H96 L105 103 H122 C141 103 153 94 153 80 C153 66 141 56 123 56 Z" fill="#161614"/></svg>`;
@@ -1399,7 +1514,7 @@ async function processClientBulkSchedule(clientId){
     const newId = (db.nextIds.service || 60) + 1;
     db.nextIds.service = newId;
     db.services.push({
-      id: newId, title: restText, client: c.name, date: dateIso,
+      id: newId, title: restText, client: c.name, clientId: c.id, date: dateIso,
       time: extractedTime, status: 'Agendado', notes: `Importado via Cronograma: ${line}`
     });
     addedCount++;
@@ -1438,8 +1553,8 @@ function buildCalendarGridHtml(targetDateObj, servicesList, presetClientName = n
     let ev = (servicesList || []).filter(s => s.date === ds);
     let isToday = ds === iso(today);
 
-    const addCall = presetClientName
-      ? `openModal('service', null, null, '${ds}', {client: '${esc(presetClientName).replace(/'/g, "\\'")}'})`
+    const addCall = presetClientName && currentView === 'client-hub'
+      ? `openProjectEditor('task', null, '${ds}')`
       : `openModal('service', null, null, '${ds}')`;
 
     out += `
@@ -1494,11 +1609,12 @@ function renderTopClientSwitcherBar(){
 function openClientHub(clientId){
   const c = (db.clients || []).find(x => Number(x.id) === Number(clientId));
   if(!c) return;
+  if(Number(activeHubClientId) !== Number(c.id)) { const bulk = document.getElementById('bulkScheduleTextarea'); if(bulk && projectClient()) projectViewState(projectClient()).bulk = bulk.value; document.getElementById('clientHubContainer').innerHTML = ''; }
   activeHubClientId = c.id;
   currentView = 'client-hub';
   document.querySelectorAll('.section-view').forEach(x => x.classList.remove('active'));
   document.getElementById('view-client-hub').classList.add('active');
-  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('button[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === 'clients'));
   document.getElementById('crumb').textContent = `Quadro do Cliente / ${c.name}`;
   document.getElementById('pageTitle').textContent = c.name;
   closeMobileSidebar();
@@ -1507,137 +1623,265 @@ function openClientHub(clientId){
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function renderClientHubView(){
-  const container = document.getElementById('clientHubContainer');
-  if(!container || !activeHubClientId) return;
-  const c = (db.clients || []).find(x => Number(x.id) === Number(activeHubClientId));
-  if(!c){ go('dashboard'); return; }
+// BEGIN CLIENT PROJECT
+const projectUi = new Map();
+let projectEditor = null;
+let projectSaving = false;
+const projectList = value => Array.isArray(value) ? value.filter(Boolean) : Object.values(value || {}).filter(Boolean);
+function projectClient() { return (db.clients || []).find(c => Number(c.id) === Number(activeHubClientId)); }
+function projectData(c) {
+  const p = c.project || {};
+  return {...p, groups: projectList(p.groups), team: projectList(p.team), files: projectList(p.files)};
+}
+function projectViewState(c) {
+  if (!projectUi.has(String(c.id))) projectUi.set(String(c.id), {tab:'scope', filter:'all', search:'', closed:new Set()});
+  return projectUi.get(String(c.id));
+}
+function belongsToProject(task, c) {
+  return task.clientId != null && task.clientId !== '' ? Number(task.clientId) === Number(c.id) : normStr(task.client) === normStr(c.name);
+}
+function projectTasks(c) { return (db.services || []).filter(t => belongsToProject(t,c)); }
+function projectStats(tasks) {
+  const active = tasks.filter(t => t.status !== 'Cancelado');
+  const done = active.filter(t => t.status === 'Concluído').length;
+  const doing = active.filter(t => t.status === 'Em andamento').length;
+  return {total:active.length, done, doing, pending:active.length-done-doing, canceled:tasks.length-active.length, percent:active.length ? Math.round(done/active.length*100) : 0};
+}
+function projectSafeUrl(raw) {
+  try { const u = new URL(String(raw || '').trim()); return ['http:','https:'].includes(u.protocol) ? u.href : ''; } catch (_) { return ''; }
+}
+function projectUid() { return crypto.randomUUID(); }
+function projectStatusText(task) { return task.status === 'Agendado' || !task.status ? 'Pendente' : task.status === 'Concluído' ? 'Concluída' : task.status === 'Cancelado' ? 'Cancelada' : task.status; }
+function projectIcon(name) {
+  const paths = { tasks:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', calendar:'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2', files:'M4 5h6l2 2h8v13H4z', team:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3a4 4 0 0 1 0 8', notes:'M4 3h16v14H9l-5 4zM8 7h8M8 11h6', chart:'M4 20V10M10 20V4M16 20v-7M22 20H2', plus:'M12 5v14M5 12h14', edit:'m16 3 5 5-12 12-6 1 1-6zM14 5l5 5', trash:'M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7', link:'m10 13 4-4M9 16l-2 2a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0M15 8l2-2a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0', check:'m5 12 4 4L19 6', money:'M3 5h18v14H3zM12 8v8M9 10h5M10 14h5', chevron:'m8 10 4 4 4-4' };
+  return `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name] || paths.tasks}"/></svg>`;
+}
+function projectAction(action,label,id='',cls='') { return `<button aria-label="${esc(({'edit-file':'Editar arquivo ou link','edit-member':'Editar pessoa'})[action] || label.replace(/<[^>]*>/g,''))}" type="button" class="pj-button ${cls}" data-pj="${action}" data-id="${esc(id)}">${label}</button>`; }
+function projectTaskRow(t,p) {
+  const member = p.team.find(m => m.id === t.assigneeId);
+  return `<div class="pj-task ${t.status==='Concluído'?'is-done':''}">
+    <input type="checkbox" aria-label="Concluir ${esc(t.title)}" data-pj-check="${t.id}" ${t.status==='Concluído'?'checked':''} ${projectSaving?'disabled':''}>
+    <button type="button" class="pj-task-name" data-pj="edit-task" data-id="${t.id}">${esc(t.title)}<small>${t.date ? prettyDate(t.date) : 'Sem data'}${member ? ` · ${esc(member.name)}` : ''}</small></button>
+    <select aria-label="Status de ${esc(t.title)}" data-pj-status="${t.id}" ${projectSaving?'disabled':''}>${['Agendado','Em andamento','Concluído','Cancelado'].map(s=>`<option value="${s}" ${s===(t.status||'Agendado')?'selected':''}>${projectStatusText({status:s})}</option>`).join('')}</select>
+    <button type="button" class="pj-icon-button pj-danger" data-pj="delete-task" data-id="${t.id}" aria-label="Remover tarefa ${esc(t.title)}">${projectIcon('trash')}</button>
+  </div>`;
+}
+function projectScopeHtml(c,p,tasks,ui) {
+  const known = new Set(p.groups.map(g=>g.id));
+  const groups = [...p.groups, {id:'',title:'Sem grupo'}];
+  return `<div class="pj-scope-tools"><div class="pj-filter" role="group" aria-label="Filtrar tarefas">${[['all','Todas'],['Agendado','Pendentes'],['Em andamento','Em andamento'],['Concluído','Concluídas'],['Cancelado','Canceladas']].map(([id,label])=>`<button type="button" data-pj="filter" data-id="${id}" class="${ui.filter===id?'active':''}">${label}</button>`).join('')}</div>${projectAction('add-group',projectIcon('plus')+' Novo grupo')}</div>
+    <label class="pj-search">Buscar tarefa<input id="projectTaskSearch" type="search" value="${esc(ui.search)}" placeholder="Buscar pelo título…"></label>
+    <div class="pj-groups">${groups.map(g=>{
+      const all = tasks.filter(t=>g.id ? t.projectGroupId===g.id : !known.has(t.projectGroupId));
+      if(!g.id && !all.length && p.groups.length) return '';
+      const shown=all.filter(t=>(ui.filter==='all'||(t.status||'Agendado')===ui.filter)&&normStr(t.title).includes(normStr(ui.search)));
+      const st=projectStats(all);
+      return `<details class="pj-group" data-group="${esc(g.id)}" ${ui.closed.has(g.id)?'':'open'}><summary>${projectIcon('files')}<strong>${esc(g.title)}</strong><span class="pj-group-count">${st.done}/${st.total}</span><span class="pj-percent">${st.percent}%</span>${projectIcon('chevron')}</summary><div class="pj-group-body">
+      <div class="pj-group-tools">${projectAction('add-task',projectIcon('plus')+' Tarefa',g.id)}${g.id?projectAction('edit-group','Editar grupo',g.id)+projectAction('delete-group','Remover grupo',g.id,'pj-danger'):''}</div>
+      ${shown.map(t=>projectTaskRow(t,p)).join('')||'<div class="pj-empty">Nenhuma tarefa neste filtro. Adicione uma tarefa ou altere o filtro.</div>'}</div></details>`;
+    }).join('')}</div>`;
+}
+function projectCalendarHtml(c,tasks) {
+  return `<section class="pj-card"><div class="pj-section-heading"><div><h3>Cronograma</h3><p>O mesmo calendário de demandas da agência. Arraste para remarcar ou edite a data.</p></div>${projectAction('calendar-pdf','Exportar PDF')}</div>
+  <div class="pj-calendar-tools">${projectAction('prev-month','←','','pj-icon-button')}<strong>${esc(clientHubCalendarDate.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}))}</strong>${projectAction('next-month','→','','pj-icon-button')}${projectAction('today','Mês atual')}${projectAction('add-task','+ Nova tarefa','','pj-primary')}</div>
+  <div class="calendar-scroll-wrap"><div class="calendar-grid">${buildCalendarGridHtml(clientHubCalendarDate,tasks,c.name)}</div></div>
+  ${tasks.some(t=>!t.date)?`<p class="pj-helper">${tasks.filter(t=>!t.date).length} tarefa(s) sem data. Defina o vencimento em Escopo e Tarefas para exibi-las no calendário.</p>`:''}
+  <details class="pj-bulk"><summary>Importar cronograma em texto</summary><p>Uma entrega por linha, no formato DD/MM/AAAA - Título.</p><textarea id="bulkScheduleTextarea" placeholder="20/11/2026 - Aprovação da identidade visual">${esc(projectViewState(c).bulk||'')}</textarea>${projectAction('bulk','Importar e agendar','','pj-primary')}</details></section>`;
+}
+function projectFilesHtml(c,p) {
+  return `<section class="pj-card"><div class="pj-section-heading"><div><h3>Arquivos e links</h3><p>Anexe arquivos ou guarde links de pastas do Google Drive.</p></div><div class="pj-actions">${projectAction('add-file',projectIcon('plus')+' Arquivo')}${projectAction('add-link',projectIcon('link')+' Link / Drive','','pj-primary')}</div></div>
+  <p class="pj-helper">Até 5 MB por arquivo e 15 MB de anexos por cliente. Para arquivos maiores, use um link do Drive.</p>
+  <div class="pj-resources">${p.files.map(f=>`<div class="pj-resource">${projectIcon(f.url?'link':'files')}<div><strong>${esc(f.name)}</strong><small>${f.url?esc(projectSafeUrl(f.url) ? new URL(projectSafeUrl(f.url)).hostname : 'Link inválido'):`${Math.ceil((Number(f.size)||0)/1024)} KB · arquivo anexado`}</small></div>${f.url&&projectSafeUrl(f.url)?`<a class="pj-button" href="${esc(projectSafeUrl(f.url))}" target="_blank" rel="noopener noreferrer">Abrir</a>`:f.data?projectAction('download-file','Baixar',f.id):''}${projectAction('edit-file',projectIcon('edit'),f.id)}<button class="pj-icon-button pj-danger" type="button" data-pj="delete-file" data-id="${esc(f.id)}" aria-label="Remover ${esc(f.name)}">${projectIcon('trash')}</button></div>`).join('')||'<div class="pj-empty">Nenhum arquivo ou link adicionado.</div>'}</div>
+  ${(c.contractPdfData||c.contractPdfUrl)?`<div class="pj-contract">Contrato já cadastrado ${projectAction('contract','Ver contrato PDF')}</div>`:''}</section>`;
+}
+function projectTeamHtml(p) {
+  return `<section class="pj-card"><div class="pj-section-heading"><div><h3>Equipe do projeto</h3><p>Cadastre os participantes e atribua responsáveis às tarefas.</p></div>${projectAction('add-member',projectIcon('plus')+' Adicionar pessoa','','pj-primary')}</div><div class="pj-team-grid">${p.team.map(m=>`<article class="pj-person"><span class="pj-avatar">${esc(initials(m.name))}</span><div><strong>${esc(m.name)}</strong><small>${esc(m.role||'Integrante da equipe')}</small>${m.email?`<small>${esc(m.email)}</small>`:''}</div>${projectAction('edit-member',projectIcon('edit'),m.id)}<button type="button" class="pj-icon-button pj-danger" data-pj="delete-member" data-id="${esc(m.id)}" aria-label="Remover ${esc(m.name)}">${projectIcon('trash')}</button></article>`).join('')||'<div class="pj-empty">Adicione a primeira pessoa da equipe.</div>'}</div></section>`;
+}
+function renderClientHubView() {
+  const container=document.getElementById('clientHubContainer'), c=projectClient();
+  if(!container||!activeHubClientId)return;
+  if(!c){go('clients');return;}
+  const p=projectData(c), ui=projectViewState(c), tasks=projectTasks(c), st=projectStats(tasks);
+  const oldBulk=document.getElementById('bulkScheduleTextarea'); if(oldBulk)ui.bulk=oldBulk.value;
+  const status=p.status&&p.status!=='Automático'?p.status:st.total&&st.done===st.total?'Concluído':st.doing||st.done?'Em andamento':'Planejado';
+  const tabs=[['scope','tasks','Escopo e Tarefas'],['calendar','calendar','Cronograma'],['files','files','Arquivos'],['team','team','Equipe'],['notes','notes','Observações'],['finance','money','Financeiro']];
+  let content=ui.tab==='calendar'?projectCalendarHtml(c,tasks):ui.tab==='files'?projectFilesHtml(c,p):ui.tab==='team'?projectTeamHtml(p):ui.tab==='notes'?`<section class="pj-card"><div class="pj-section-heading"><div><h3>Observações do projeto</h3><p>Briefing, decisões e orientações para a equipe.</p></div>${projectAction('edit-notes','Editar observações','','pj-primary')}</div><div class="pj-notes">${esc(p.notes||'Nenhuma observação adicionada.')}</div></section>`:ui.tab==='finance'?projectFinancialHtml(c):projectScopeHtml(c,p,tasks,ui);
+  container.innerHTML=`<div class="pj-workspace"><div class="pj-breadcrumb"><button type="button" data-pj="back">Clientes</button><span>›</span><strong>${esc(c.name)}</strong><div class="pj-actions">${projectAction('edit-client','Cadastro e logo')}${projectAction('add-task',projectIcon('plus')+' Nova tarefa','','pj-primary')}</div></div>
+  <div class="pj-layout"><main class="pj-main"><section class="pj-card pj-hero"><div class="pj-identity"><div class="pj-client-logo">${c.logoData?`<img src="${esc(c.logoData)}" alt="Logo de ${esc(c.name)}">`:esc(initials(c.name))}</div><div class="pj-client-title"><span class="pj-kicker">${esc(c.clientCategory==='Projeto'?'Projeto estratégico':'Projeto do cliente')}</span><h2>${esc(c.name)}</h2><p>${esc(p.description||c.service||'Defina o escopo e organize as entregas do projeto.')}</p><div class="pj-dates"><span>${projectIcon('calendar')} Início: ${prettyDate(p.startDate||c.startDate)}</span><span>${projectIcon('calendar')} Previsão: ${prettyDate(p.endDate)}</span></div></div><button type="button" class="pj-status" data-pj="edit-project">● ${esc(status)} ${projectIcon('chevron')}</button></div>
+  <div class="pj-progress"><div><small>Progresso geral do projeto</small><strong>${st.percent}%</strong></div><div class="pj-track" role="progressbar" aria-label="Progresso do projeto" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${st.percent}"><span style="width:${st.percent}%"></span></div><span>${st.done} de ${st.total} tarefas concluídas</span></div></section>
+  <nav class="pj-tabs" aria-label="Seções do projeto">${tabs.map(([id,icon,label])=>`<button type="button" data-pj="tab" data-id="${id}" aria-current="${ui.tab===id?'page':'false'}" class="${ui.tab===id?'active':''}">${projectIcon(icon)}${label}</button>`).join('')}</nav><div class="pj-content">${content}</div></main>
+  <aside class="pj-aside"><section class="pj-card"><h3>${projectIcon('chart')} Resumo do Projeto</h3><dl class="pj-summary"><div><dt>Tarefas totais</dt><dd>${st.total}</dd></div><div><dt>Concluídas</dt><dd>${st.done}</dd></div><div><dt>Em andamento</dt><dd>${st.doing}</dd></div><div><dt>Pendentes</dt><dd>${st.pending}</dd></div>${st.canceled?`<div><dt>Canceladas</dt><dd>${st.canceled}</dd></div>`:''}</dl></section>
+  <section class="pj-card"><h3>${projectIcon('calendar')} Cronograma principal</h3><div class="pj-timeline">${p.groups.map(g=>{
+    const ts=tasks.filter(t=>t.projectGroupId===g.id), stat=projectStats(ts), dates=ts.map(t=>t.date).filter(Boolean).sort();
+    const start=g.startDate||dates[0],end=g.endDate||dates[dates.length-1];
+    return `<button type="button" class="pj-milestone" data-pj="focus-group" data-id="${esc(g.id)}"><span class="pj-milestone-dot ${stat.total&&stat.percent===100?'done':''}">${stat.total&&stat.percent===100?projectIcon('check'):''}</span><span><strong>${esc(g.title)}</strong><small>${start?prettyDate(start):'Sem data'}${end&&end!==start?' – '+prettyDate(end):''}</small></span><em>${stat.total&&stat.percent===100?'Concluído':stat.doing||stat.done?'Em andamento':'Pendente'}</em></button>`;
+  }).join('')||'<p class="pj-helper">Crie grupos de escopo para visualizar as etapas aqui.</p>'}</div>${projectAction('add-group','+ Nova etapa')}</section>
+  <section class="pj-card pj-side-team"><h3>${projectIcon('team')} Equipe <span>${p.team.length}</span></h3><div class="pj-team-preview">${p.team.slice(0,5).map(m=>`<span class="pj-avatar" title="${esc(m.name)}">${esc(initials(m.name))}</span>`).join('')}</div>${projectAction('add-member','+ Adicionar pessoa')}</section></aside></div></div>`;
+}
+function projectInput(label,name,type='text',value='',extra='') { return `<label class="pj-field"><span>${label}</span><input name="${name}" type="${type}" value="${esc(value)}" ${extra}></label>`; }
+function projectSelect(label,name,options,value='') { return `<label class="pj-field"><span>${label}</span><select name="${name}">${options.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(value)?'selected':''}>${esc(l)}</option>`).join('')}</select></label>`; }
+function openProjectEditor(kind,id=null,date='',group='') {
+  if(projectSaving)return;
+  const c=projectClient();if(!c)return;
+  const p=projectData(c);let item={},body='',title='';
+  if(kind==='task') {
+    item=projectTasks(c).find(t=>String(t.id)===String(id))||{};
+    title=id?'Editar tarefa':'Nova tarefa';
+    body=projectInput('Título da tarefa','title','text',item.title||'','required maxlength="200"')+projectSelect('Grupo de escopo','projectGroupId',[['','Sem grupo'],...p.groups.map(g=>[g.id,g.title])],item.projectGroupId||group)+projectInput('Data de vencimento','date','date',item.date||date)+projectInput('Horário','time','time',item.time||'')+projectSelect('Status','status',[['Agendado','Pendente'],['Em andamento','Em andamento'],['Concluído','Concluída'],['Cancelado','Cancelada']],item.status||'Agendado')+projectSelect('Responsável','assigneeId',[['','Sem responsável'],...p.team.map(m=>[m.id,m.name])],item.assigneeId||'')+`<label class="pj-field pj-full"><span>Descrição / briefing</span><textarea name="notes">${esc(item.notes||'')}</textarea></label>`;
+  } else if(kind==='group') {
+    item=p.groups.find(g=>g.id===id)||{};title=id?'Editar grupo':'Novo grupo de escopo';
+    body=projectInput('Título do grupo','title','text',item.title||'','required maxlength="120"')+projectInput('Início da etapa','startDate','date',item.startDate||'')+projectInput('Previsão da etapa','endDate','date',item.endDate||'');
+  } else if(kind==='member') {
+    item=p.team.find(m=>m.id===id)||{};title=id?'Editar pessoa':'Adicionar pessoa à equipe';
+    body=projectInput('Nome','name','text',item.name||'','required maxlength="120"')+projectInput('Função','role','text',item.role||'','maxlength="120"')+projectInput('E-mail (opcional)','email','email',item.email||'')+'<p class="pj-helper pj-full">Cadastro interno. Nenhum convite ou e-mail será enviado.</p>';
+  } else if(kind==='file'||kind==='link') {
+    item=p.files.find(f=>f.id===id)||{};if(item.url)kind='link';title=id?'Editar arquivo / link':kind==='link'?'Adicionar link ou pasta do Drive':'Adicionar arquivo';
+    body=projectInput('Nome / título','name','text',item.name||'','required maxlength="200"')+(kind==='link'?projectInput('URL da pasta ou arquivo','url','url',item.url||'','required placeholder="https://drive.google.com/…"'):`<label class="pj-field pj-full"><span>Arquivo (até 5 MB)</span><input name="attachment" type="file" ${id?'':'required'}></label>`);
+  } else if(kind==='notes') {
+    title='Observações do projeto';body=`<label class="pj-field pj-full"><span>Observações</span><textarea name="notes" rows="10" maxlength="20000">${esc(p.notes||'')}</textarea></label>`;
+  } else {
+    kind='project';title='Configurações do projeto';body=projectInput('Descrição do projeto','description','text',p.description||c.service||'','maxlength="300"')+projectSelect('Situação do projeto','status',['Automático','Planejado','Em andamento','Pausado','Concluído'].map(v=>[v,v]),p.status||'Automático')+projectInput('Início do projeto','startDate','date',p.startDate||c.startDate||'')+projectInput('Previsão de conclusão','endDate','date',p.endDate||'');
+  }
+  projectEditor={kind,id,clientId:c.id};
+  document.getElementById('projectEditorTitle').textContent=title;
+  document.getElementById('projectEditorFields').innerHTML=body;
+  document.getElementById('projectEditorError').textContent='';
+  document.getElementById('projectEditorDialog').showModal();
+}
+async function persistProject(key) {
+  projectSaving=true;
+  try { render();const result=await saveData(key);showToast(result===false?'Salvo neste aparelho. Confira a conexão para sincronizar.':'Projeto atualizado!'); }
+  finally {projectSaving=false;if(currentView==='client-hub')renderClientHubView();}
+}
+function projectReadFile(file) { return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('Não foi possível ler o arquivo.'));reader.readAsDataURL(file);}); }
+async function submitProjectEditor(event) {
+  event.preventDefault();if(projectSaving||!projectEditor)return;
+  const editor={...projectEditor};const form=event.target,button=form.querySelector('[type="submit"]');button.disabled=true;
+  const data=Object.fromEntries(new FormData(form));
+  const c=(db.clients||[]).find(c=>Number(c.id)===Number(editor.clientId));if(!c){button.disabled=false;return;}
+  const p=projectData(c),old=editor.id;
+  try {
+    for(const key of ['name','title']) if(key in data){data[key]=data[key].trim();if(!data[key])throw Error('Preencha o nome ou título.');}
+    if(data.startDate&&data.endDate&&data.endDate<data.startDate)throw Error('A previsão deve ser igual ou posterior à data de início.');
+    let collection='clients';
+    if(editor.kind==='task') {
+      const existing=projectTasks(c).find(t=>String(t.id)===String(old));
+      if(old&&!existing)throw Error('Esta tarefa não está mais disponível.');
+      if(data.projectGroupId&&!p.groups.some(g=>g.id===data.projectGroupId))throw Error('O grupo não está mais disponível.');
+      if(data.assigneeId&&!p.team.some(m=>m.id===data.assigneeId))data.assigneeId='';
+      if(existing)Object.assign(existing,data,{client:c.name,clientId:c.id});
+      else {
+        db.services=db.services||[];db.nextIds=db.nextIds||{};
+        const id=Math.max(Number(db.nextIds.service)||60,...db.services.map(t=>Number(t.id)||0))+1;db.nextIds.service=id;
+        db.services.push({...data,id,client:c.name,clientId:c.id});
+      }
+      collection='services';
+    } else if(editor.kind==='group'||editor.kind==='member') {
+      const key=editor.kind==='group'?'groups':'team',idx=p[key].findIndex(x=>x.id===old);
+      const entry={...data,id:old||projectUid()};if(idx>=0)p[key][idx]={...p[key][idx],...entry};else p[key].push(entry);
+      c.project=p;
+    } else if(editor.kind==='file'||editor.kind==='link') {
+      const idx=p.files.findIndex(f=>f.id===old),existing=p.files[idx]||{},entry={...existing,id:old||projectUid(),name:data.name};
+      if(editor.kind==='link'){entry.url=projectSafeUrl(data.url);if(!entry.url)throw Error('Use um link completo começando com https:// ou http://.');}
+      else {
+        const file=form.elements.attachment.files[0];
+        if(file){
+          if(file.size>5*1024*1024)throw Error('O arquivo excede 5 MB. Adicione um link do Drive.');
+          const total=p.files.filter(f=>f.id!==old).reduce((sum,f)=>sum+(Number(f.size)||0),0);
+          if(total+file.size>15*1024*1024)throw Error('Este cliente atingiu o limite de 15 MB. Use um link do Drive.');
+          projectSaving=true;
+          entry.data=await projectReadFile(file);entry.mime=file.type||'application/octet-stream';entry.size=file.size;entry.fileName=file.name;
+          projectSaving=false;
+        }else if(!existing.data)throw Error('Selecione um arquivo.');
+      }
+      if(idx>=0)p.files[idx]=entry;else p.files.push(entry);c.project=p;
+    } else if(editor.kind==='notes')c.project={...p,notes:data.notes};
+    else c.project={...p,...data};
+    document.getElementById('projectEditorDialog').close();projectEditor=null;
+    await persistProject(collection);
+  }catch(error){projectSaving=false;document.getElementById('projectEditorError').textContent=error.message||'Não foi possível salvar.';}
+  finally{button.disabled=false;}
+}
+async function projectRemove(kind,id) {
+  if(projectSaving)return;const c=projectClient();if(!c)return;const p=projectData(c);let key='clients';
+  const message=kind==='group'?'Remover este grupo? As tarefas serão mantidas em Sem grupo.':kind==='member'?'Remover esta pessoa da equipe? As tarefas serão mantidas sem responsável.':kind==='task'?'Remover esta tarefa também do calendário interativo?':'Remover este arquivo ou link do projeto?';
+  if(!confirm(message))return;
+  if(kind==='task'){db.services=(db.services||[]).filter(t=>!(String(t.id)===String(id)&&belongsToProject(t,c)));key='services';}
+  else if(kind==='group'){p.groups=p.groups.filter(g=>g.id!==id);projectTasks(c).filter(t=>t.projectGroupId===id).forEach(t=>t.projectGroupId='');c.project=p;key=['clients','services'];}
+  else if(kind==='member'){p.team=p.team.filter(m=>m.id!==id);projectTasks(c).filter(t=>t.assigneeId===id).forEach(t=>t.assigneeId='');c.project=p;key=['clients','services'];}
+  else{p.files=p.files.filter(f=>f.id!==id);c.project=p;}
+  await persistProject(key);
+}
+async function projectSetTaskStatus(id,status) {
+  if(projectSaving){renderClientHubView();return;}
+  const c=projectClient(),t=c&&projectTasks(c).find(t=>String(t.id)===String(id));
+  if(!t||!['Agendado','Em andamento','Concluído','Cancelado'].includes(status))return;
+  t.status=status;await persistProject('services');
+}
+function downloadProjectFile(id) {
+  const c=projectClient(),f=c&&projectData(c).files.find(f=>f.id===id);if(!f||!f.data)return;
+  try {
+    const base64=String(f.data).split(',')[1];const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));
+    const url=URL.createObjectURL(new Blob([bytes],{type:'application/octet-stream'}));
+    const a=document.createElement('a');a.href=url;a.download=f.fileName||f.name||'arquivo';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
+  }catch(_){showToast('Não foi possível baixar este arquivo.');}
+}
+document.getElementById('projectEditorForm').addEventListener('submit',submitProjectEditor);
+document.getElementById('projectEditorCancel').onclick=()=>{if(!projectSaving)document.getElementById('projectEditorDialog').close();};
+document.getElementById('projectEditorDialog').addEventListener('cancel',e=>{if(projectSaving)e.preventDefault();});
+document.getElementById('projectEditorDialog').addEventListener('close',()=>projectEditor=null);
+document.getElementById('clientHubContainer').addEventListener('click',async event=>{
+  const button=event.target.closest('[data-pj]');if(!button)return;const c=projectClient();if(!c)return;
+  const action=button.dataset.pj,id=button.dataset.id||'',ui=projectViewState(c);
+  if(action==='tab'){ui.tab=id;renderClientHubView();}
+  else if(action==='filter'){ui.filter=id;renderClientHubView();}
+  else if(action==='back')go('clients');
+  else if(action==='add-task')openProjectEditor('task',null,'',id);
+  else if(action==='edit-task')openProjectEditor('task',id);
+  else if(action==='add-group'||action==='edit-group')openProjectEditor('group',id||null);
+  else if(action==='add-member'||action==='edit-member')openProjectEditor('member',id||null);
+  else if(action==='add-file')openProjectEditor('file');
+  else if(action==='add-link')openProjectEditor('link');
+  else if(action==='edit-file')openProjectEditor('file',id);
+  else if(action==='edit-notes')openProjectEditor('notes');
+  else if(action==='edit-project')openProjectEditor('project');
+  else if(action==='edit-client')openModal('client',c.id);
+  else if(action==='add-income')openModal('income',null,null,null,{client:c.name,value:c.value||'',description:'Mensalidade — '+c.name});
+  else if(action==='add-expense')openModal('expense',null,'Tráfego Pago',null,{clientName:c.name,description:'Verba Tráfego Pago — '+c.name});
+  else if(action.startsWith('delete-'))await projectRemove(action.slice(7),id);
+  else if(action==='download-file')downloadProjectFile(id);
+  else if(action==='prev-month'||action==='next-month')changeClientHubMonth(action==='prev-month'?-1:1);
+  else if(action==='today'){clientHubCalendarDate=new Date(today.getFullYear(),today.getMonth(),1);renderClientHubView();}
+  else if(action==='calendar-pdf')openClientSchedulePdfModal(c.id);
+  else if(action==='contract')openContractViewer(c.id);
+  else if(action==='bulk')await processClientBulkSchedule(c.id);
+  else if(action==='focus-group'){ui.tab='scope';ui.filter='all';ui.search='';ui.closed.delete(id);renderClientHubView();Array.from(document.querySelectorAll('.pj-group')).find(el=>el.dataset.group===id)?.scrollIntoView({behavior:'smooth',block:'center'});}
+});
+document.getElementById('clientHubContainer').addEventListener('change',event=>{
+  if(event.target.matches('[data-pj-status]'))projectSetTaskStatus(event.target.dataset.pjStatus,event.target.value);
+  if(event.target.matches('[data-pj-check]'))projectSetTaskStatus(event.target.dataset.pjCheck,event.target.checked?'Concluído':'Agendado');
+});
+document.getElementById('clientHubContainer').addEventListener('input',event=>{
+  if(event.target.id!=='projectTaskSearch')return;
+  const c=projectClient();if(!c)return;projectViewState(c).search=event.target.value;
+  const pos=event.target.selectionStart;renderClientHubView();const input=document.getElementById('projectTaskSearch');input.focus();try{input.setSelectionRange(pos,pos);}catch(_){}
+});
+document.getElementById('clientHubContainer').addEventListener('toggle',event=>{
+  if(!event.target.matches('.pj-group')||!event.target.isConnected)return;const c=projectClient();if(!c)return;
+  const ui=projectViewState(c),id=event.target.dataset.group;if(event.target.open)ui.closed.delete(id);else ui.closed.add(id);
+},true);
+// END CLIENT PROJECT
 
-  const existingBulkText = document.getElementById('bulkScheduleTextarea')?.value || '';
-  const cNameNorm = normStr(c.name);
-  const clientDemands = (db.services || []).filter(s => normStr(s.client) === cNameNorm).sort((a,b) => (a.date||'').localeCompare(b.date||''));
-  const clientIncomes = sortNewestFirst((db.incomes || []).filter(i => normStr(i.client) === cNameNorm), 'due');
-  const clientExpenses = sortNewestFirst((db.expenses || []).filter(e => normStr(e.clientName) === cNameNorm), 'due');
-
-  const totalReceived = clientIncomes.filter(i => i.status === 'Recebido').reduce((a,x) => a + Number(x.value||0), 0);
-  const totalPendingIn = clientIncomes.filter(i => i.status !== 'Recebido').reduce((a,x) => a + Number(x.value||0), 0);
-  const totalTrafficAndExp = clientExpenses.reduce((a,x) => a + Number(x.value||0), 0);
-  const totalTrafficPaid = clientExpenses.filter(e => e.status === 'Pago').reduce((a,x) => a + Number(x.value||0), 0);
-  const pendingDemandsCount = clientDemands.filter(d => d.status !== 'Concluído').length;
-
-  const bigLogoHtml = c.logoData
-    ? `<div class="client-hub-big-logo"><img src="${esc(c.logoData)}" alt="${esc(c.name)}"></div>`
-    : `<div class="client-hub-big-logo">${esc(initials(c.name))}</div>`;
-
-  const clientMonthLabel = clientHubCalendarDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-  const clientCalendarHtml = buildCalendarGridHtml(clientHubCalendarDate, clientDemands, c.name);
-
-  container.innerHTML = `
-    <div class="client-hub-banner">
-      <div class="client-hub-banner-left">
-        ${bigLogoHtml}
-        <div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <h2 style="margin:0;font-size:24px">${esc(c.name)}</h2>
-            ${badge(c.status || 'Ativo')}
-            <span class="tiny-pill">${esc(c.clientCategory || 'Serviço Recorrente')}</span>
-          </div>
-          <div style="color:#a8a8a2;font-size:12px;margin-top:6px">
-            Escopo: <strong style="color:#fff">${esc(c.service || '—')}</strong> · Parceria: <strong style="color:#fff">${calculateTenure(c.startDate)}</strong> · Contrato: <strong style="color:#fff">${money(c.value)}</strong>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-light btn-small" style="background:#e6ecf2;color:#141413;font-weight:700" onclick="openClientSchedulePdfModal(${c.id})">&#x25A6;&#xFE0E; Cronograma PDF (A4)</button>
-        ${(c.contractPdfData || c.contractPdfUrl)
-          ? `<button class="btn btn-light btn-small" onclick="openContractViewer(${c.id})">&#x25EB;&#xFE0E; Ver Contrato PDF</button>`
-          : `<button class="btn btn-light btn-small" onclick="openModal('client', ${c.id})">＋ Contrato PDF</button>`
-        }
-        <button class="btn btn-light btn-small" onclick="openModal('client', ${c.id})">Editar &#x270E;&#xFE0E;</button>
-        <button class="btn btn-primary btn-small" style="background:#fff;color:#141413" onclick="quickChargeClient(${c.id})">＋ Cobrar (PDF)</button>
-      </div>
-    </div>
-
-    <div class="stats" style="grid-template-columns:repeat(4,minmax(0,1fr))">
-      <article class="stat"><div class="stat-top">Valor Acordado <span class="stat-icon">&#x25C8;&#xFE0E;</span></div><div class="stat-value">${money(c.value)}</div><div class="stat-foot">Já recebido: <strong>${money(totalReceived)}</strong></div></article>
-      <article class="stat"><div class="stat-top">Valores a Receber <span class="stat-icon">&#x2199;&#xFE0E;</span></div><div class="stat-value" style="color:${totalPendingIn>0?'var(--amber)':'var(--ink)'}">${money(totalPendingIn)}</div><div class="stat-foot">${clientIncomes.filter(i=>i.status!=='Recebido').length} em aberto</div></article>
-      <article class="stat"><div class="stat-top">Despesas & Tráfego <span class="stat-icon">&#x2197;&#xFE0E;</span></div><div class="stat-value" style="color:var(--red)">${money(totalTrafficAndExp)}</div><div class="stat-foot">${money(totalTrafficPaid)} já pagos</div></article>
-      <article class="stat"><div class="stat-top">Demandas <span class="stat-icon">&#x2733;&#xFE0E;</span></div><div class="stat-value">${pendingDemandsCount}</div><div class="stat-foot">pendentes de ${clientDemands.length} totais</div></article>
-    </div>
-
-    <section class="bulk-schedule-box">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-        <div>
-          <h3 style="margin:0;font-size:16px">&#x2726;&#xFE0E; Importador Inteligente de Cronograma & Posts (${esc(c.name)})</h3>
-          <div class="sub">Cole sua lista de datas e entregas abaixo (uma por linha). O sistema entende o dia, mês e horário e já agenda no calendário e na lista!</div>
-        </div>
-        <span class="tiny-pill" style="background:var(--brand);color:#fff">Automático</span>
-      </div>
-      <textarea id="bulkScheduleTextarea" class="bulk-schedule-textarea" placeholder="Exemplo — cole seu cronograma aqui:&#10;28/10 - Stories (Novo Mascote Silhueta) ás 12h e ás 18h 26 Sabores&#10;29/10 - Feed (Promoção 26 Sabores)&#10;01/11 - Stories (Revelação Flashito)">${esc(existingBulkText)}</textarea>
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-        <span class="sub">Formato reconhecido: <b>DD/MM - Descrição da postagem ou demanda (opcional: às 12h)</b></span>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button type="button" class="btn btn-light btn-small" onclick="document.getElementById('bulkScheduleTextarea').value=''">Limpar Texto</button>
-          <button type="button" class="btn btn-primary btn-small" onclick="processClientBulkSchedule(${c.id})">&#x2733;&#xFE0E; Processar e Agendar Automaticamente</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" style="margin-bottom:18px">
-      <div class="calendar-head">
-        <div><h2>Calendário de ${esc(c.name)}</h2><div class="sub">Visualize os posts e demandas no mês, clique para abrir ou arraste entre os dias.</div></div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <button type="button" class="btn btn-light btn-small" onclick="changeClientHubMonth(-1)">←</button>
-          <strong style="text-transform:capitalize;font-size:15px">${esc(clientMonthLabel)}</strong>
-          <button type="button" class="btn btn-light btn-small" onclick="changeClientHubMonth(1)">→</button>
-          <button type="button" class="btn btn-primary btn-small" onclick="openModal('service', null, null, null, {client: '${esc(c.name).replace(/'/g, "\\'")}'})">＋ Demanda Individual</button>
-        </div>
-      </div>
-      <div class="calendar-scroll-wrap"><div class="calendar-grid">${clientCalendarHtml}</div></div>
-    </section>
-
-    <section class="panel" style="margin-bottom:18px">
-      <div class="panel-head">
-        <div><h2>Listagem de Demandas & Cronograma de ${esc(c.name)} (${clientDemands.length})</h2><div class="sub">Todas as demandas coladas ou criadas aparecem listadas abaixo na data correta</div></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-light btn-small" onclick="openClientSchedulePdfModal(${c.id})">&#x2199;&#xFE0E; Exportar Lista em PDF (A4)</button>
-          <button class="btn btn-primary btn-small" onclick="openModal('service', null, null, null, {client: '${esc(c.name).replace(/'/g, "\\'")}'})">＋ Nova Demanda</button>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Prazo / Alerta</th><th>Demanda / Postagem</th><th>Data</th><th>Horário</th><th>Status</th><th>Ações</th></tr></thead>
-          <tbody>
-            ${clientDemands.map(s => {
-              const dead = getDeadlineStatus(s.date, s.status);
-              const mediaSrc = s.mediaData || s.mediaUrl || '';
-              const isVid = isVideoMedia(mediaSrc, s.mediaType);
-              const previewIcon = mediaSrc ? (isVid ? `<video src="${esc(mediaSrc)}" class="table-thumb" muted></video>` : `<img src="${esc(mediaSrc)}" class="table-thumb" alt="Mídia">`) : '';
-              return `
-                <tr class="demand-row" onclick="openDemandDetails(${s.id})">
-                  <td><span class="alert-tag ${dead.css}">${dead.label}</span></td>
-                  <td>${previewIcon}<b>${esc(s.title)}</b></td>
-                  <td><b>${prettyDate(s.date)}</b></td>
-                  <td>${esc(s.time || '—')}</td>
-                  <td>${badge(s.status || 'Agendado')}</td>
-                  <td onclick="event.stopPropagation()">
-                    <button class="text-link" onclick="openModal('service', ${s.id})">Editar</button>
-                    <button class="text-link" onclick="toggleStatus('service', ${s.id})">Status</button>
-                    <button class="text-link text-danger" onclick="deleteItem('service', ${s.id})">Excluir</button>
-                  </td>
-                </tr>
-              `;
-            }).join('') || `<tr><td colspan="6" class="empty">Nenhuma demanda cadastrada para ${esc(c.name)}. Cole seu cronograma acima!</td></tr>`}
-          </tbody>
-        </table>
-      </div>
-    </section>
-
+function projectFinancialHtml(c) {
+  const cNameNorm=normStr(c.name);
+  const clientIncomes=sortNewestFirst((db.incomes||[]).filter(i=>normStr(i.client)===cNameNorm),'due');
+  const clientExpenses=sortNewestFirst((db.expenses||[]).filter(e=>normStr(e.clientName)===cNameNorm),'due');
+  return `<section class="pj-card" style="margin-bottom:16px"><div class="pj-section-heading"><div><h3>Financeiro do cliente</h3><p>Valor do contrato: ${money(c.value)}</p></div><button type="button" class="pj-button pj-primary" onclick="quickChargeClient(${c.id})">Cobrar / gerar PDF</button></div></section>
     <div class="lower-grid" style="margin-top:0">
       <section class="panel">
         <div class="panel-head">
           <div><h2>Valores a Receber (${esc(c.name)})</h2><div class="sub">Do mais recente para o mais antigo</div></div>
-          <button class="btn btn-success btn-small" onclick="openModal('income', null, null, null, {client: '${esc(c.name).replace(/'/g, "\\'")}', value: '${c.value||''}', description: 'Mensalidade — ${esc(c.name).replace(/'/g, "\\'")}'})">＋ Recebimento</button>
+          ${projectAction('add-income','＋ Recebimento','','pj-primary')}
         </div>
         <div class="table-wrap">
           <table>
@@ -1665,7 +1909,7 @@ function renderClientHubView(){
       <section class="panel">
         <div class="panel-head">
           <div><h2>Tráfego Pago & Despesas (${esc(c.name)})</h2><div class="sub">Do mais recente para o mais antigo</div></div>
-          <button class="btn btn-danger btn-small" onclick="openModal('expense', null, 'Tráfego Pago', null, {clientName: '${esc(c.name).replace(/'/g, "\\'")}', description: 'Verba Tráfego Pago — ${esc(c.name).replace(/'/g, "\\'")}'})">＋ Despesa / Tráfego</button>
+          ${projectAction('add-expense','＋ Despesa / Tráfego','','pj-danger')}
         </div>
         <div class="table-wrap">
           <table>
@@ -1689,7 +1933,7 @@ function renderClientHubView(){
         </div>
       </section>
     </div>
-  `;
+`;
 }
 
 // GERADOR DE PDF A4 DO CRONOGRAMA DE CONTEÚDO DO CLIENTE
@@ -2516,7 +2760,7 @@ function openDemandDetails(id){
     </div>
     ${mediaBlock}
   `;
-  document.getElementById('btnEditDemand').onclick = () => { closeDemandView(); openModal('service', item.id); };
+  document.getElementById('btnEditDemand').onclick = () => { closeDemandView(); if(currentView === 'client-hub' && projectClient() && belongsToProject(item, projectClient())) openProjectEditor('task', item.id); else openModal('service', item.id); };
   document.getElementById('btnToggleDemandStatus').onclick = async () => { await toggleStatus('service', item.id); openDemandDetails(item.id); };
   document.getElementById('btnDeleteDemand').onclick = async () => { closeDemandView(); await deleteItem('service', item.id); };
   document.getElementById('demandViewBackdrop').classList.add('open');
@@ -2615,7 +2859,7 @@ function fieldsFor(type, item = {}, presetCategory = null, presetDate = null){
     const hasLogo = !!item.logoData;
     return field('Nome do Cliente','name','text',{placeholder:'Ex.: Flash Pizzaria', value:item.name||''}) +
       field('Tipo de Contrato','clientCategory','select',{options:['Serviço Recorrente (Social Media, Tráfego)','Projeto Pontual (LP, Identidade)'], value:catVal}) +
-      `<div class="field full"><label>Logo do Cliente (Nota A4)</label><input type="file" id="clientLogoFileInput" accept="image/*"><span class="sub" id="clientLogoUploadStatus">${hasLogo ? '✓ Logo cadastrada.' : 'Selecione a logo.'}</span>${hasLogo ? `<label style="display:flex;align-items:center;gap:6px;font-size:12px;margin-top:4px"><input type="checkbox" id="removeClientLogoCheck" style="width:auto"> Remover logo</label>` : ''}</div>` +
+      `<div class="field full"><label>Logo do Cliente (Painel e Nota A4)</label><input type="file" id="clientLogoFileInput" accept="image/*"><span class="sub" id="clientLogoUploadStatus">${hasLogo ? '✓ Logo cadastrada.' : 'Selecione a logo.'}</span>${hasLogo ? `<label style="display:flex;align-items:center;gap:6px;font-size:12px;margin-top:4px"><input type="checkbox" id="removeClientLogoCheck" style="width:auto"> Remover logo</label>` : ''}</div>` +
       `<div class="field full"><label>Serviço / Escopo (Tags)</label><input type="hidden" id="serviceHiddenInput" name="service" value="${esc(item.service||'')}"><div class="tags-selector-box" id="serviceTagsContainer"></div><div style="display:flex;gap:8px;margin-top:6px"><input type="text" id="newServiceTagInput" placeholder="Nova tag..." onkeydown="if(event.key==='Enter'){event.preventDefault();addNewServiceTag();}"><button type="button" class="btn btn-light btn-small" onclick="addNewServiceTag()">＋ Tag</button></div></div>` +
       field('Início da Parceria','startDate','date',{value:item.startDate||iso(today)}) +
       field('Valor do Contrato (R$)','value','number',{step:'0.01', value:item.value||''}) +
@@ -2791,7 +3035,23 @@ document.getElementById('entryForm').addEventListener('submit', async e => {
 
   const map = {client:'clients', income:'incomes', expense:'expenses', service:'services', partner:'partners'};
   const key = map[type];
+  let saveKeys = key;
   db[key] = db[key] || [];
+  if(type === 'service') {
+    const client = (db.clients || []).find(c => normStr(c.name) === normStr(d.client));
+    const oldTask = db.services.find(t => Number(t.id) === Number(editingId));
+    d.clientId = client ? client.id : '';
+    if(oldTask && client && !belongsToProject(oldTask, client)) { d.projectGroupId = ''; d.assigneeId = ''; }
+  }
+  if(type === 'client' && editingId !== null) {
+    const oldClient = db.clients.find(c => Number(c.id) === Number(editingId));
+    if(oldClient && oldClient.name !== d.name) {
+      projectTasks(oldClient).forEach(t => {t.clientId = oldClient.id; t.client = d.name;});
+      (db.incomes || []).filter(t => normStr(t.client) === normStr(oldClient.name)).forEach(t => t.client = d.name);
+      (db.expenses || []).filter(t => normStr(t.clientName) === normStr(oldClient.name)).forEach(t => t.clientName = d.name);
+      saveKeys = ['clients','services','incomes','expenses'];
+    }
+  }
 
   if(editingId !== null){
     const idx = db[key].findIndex(x => Number(x.id) === Number(editingId));
@@ -2823,7 +3083,7 @@ document.getElementById('entryForm').addEventListener('submit', async e => {
   }
 
   ensureAllPartnersFromExpenses();
-  closeModal(); e.target.reset(); render(); await saveData(key);
+  closeModal(); e.target.reset(); render(); await saveData(saveKeys);
 });
 
 async function toggleStatus(type, id){
@@ -3002,9 +3262,11 @@ document.getElementById('importInput').addEventListener('change', e => {
     if(statusText) statusText.textContent = 'Enviando... ⚡';
 
     try {
-      const payload = changedCollectionKey && db[changedCollectionKey] !== undefined
-        ? { [changedCollectionKey]: db[changedCollectionKey], nextIds: db.nextIds, updatedAt: nowTs }
-        : db;
+      const payload = Array.isArray(changedCollectionKey)
+        ? { ...Object.fromEntries(changedCollectionKey.map(key => [key, db[key] || []])), nextIds: db.nextIds, updatedAt: nowTs }
+        : changedCollectionKey && db[changedCollectionKey] !== undefined
+          ? { [changedCollectionKey]: db[changedCollectionKey], nextIds: db.nextIds, updatedAt: nowTs }
+          : db;
       const res = await fetch(`${cleanUrl}/bow_studio_v7.json`, {
         method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)
       });
@@ -3012,19 +3274,22 @@ document.getElementById('importInput').addEventListener('change', e => {
         if(statusText) statusText.textContent = 'Instantâneo ✓';
         if(syncDot) syncDot.style.background = '#22c55e';
         document.getElementById('firebaseAlert')?.classList.remove('show');
+        return true;
       } else {
         if(statusText) statusText.textContent = 'Bloqueado (Regras)';
         if(syncDot) syncDot.style.background = '#ef4444';
+        return false;
       }
     } catch(err) {
       if(statusText) statusText.textContent = 'Offline (Salvo local)';
       if(syncDot) syncDot.style.background = '#f59e0b';
+      return false;
     } finally { isSaving = false; }
   };
 
   window.pullFromCloud = async function(forceFull = false) {
     const bulkInputFocused = document.activeElement && document.activeElement.id === 'bulkScheduleTextarea';
-    if(isSaving || isFetchingCloud || bulkInputFocused ||
+    if(isSaving || isFetchingCloud || projectSaving || document.getElementById('projectEditorDialog')?.open || document.activeElement?.id === 'projectTaskSearch' || bulkInputFocused ||
        document.getElementById('modalBackdrop')?.classList.contains('open') ||
        document.getElementById('settingsBackdrop')?.classList.contains('open') ||
        document.getElementById('contractViewBackdrop')?.classList.contains('open') ||
@@ -3050,6 +3315,7 @@ document.getElementById('importInput').addEventListener('change', e => {
       const res = await fetch(`${cleanUrl}/bow_studio_v7.json`, { cache: 'no-store' });
       if(!res.ok){ isFetchingCloud = false; return; }
       const remoteData = await res.json();
+      if(isSaving || projectSaving || document.getElementById('projectEditorDialog')?.open) return;
 
       if(remoteData && typeof remoteData === 'object'){
         db = {
@@ -3103,5 +3369,6 @@ render();
 </script>
 </body>
 </html>
+
 
 

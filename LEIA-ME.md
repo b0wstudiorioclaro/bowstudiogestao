@@ -1,27 +1,39 @@
-# BOW Studio — resumo financeiro mensal
+# BOW Studio — painel de clientes
 
-Atualização de 12/11/2026, preparada sobre o index.html atual do GitHub (blob d4312231ad69f277cd819b8a61e99526d66872d1).
+Atualização preparada em 13/11/2026 para b0wstudiorioclaro/bowstudiogestao.
 
 ## Instalar
 
-Extraia o ZIP e substitua **index.html** e **sw.js** na raiz do repositório b0wstudiorioclaro/bowstudiogestao. Os outros arquivos existentes, incluindo pwa.js, manifest.json e os ícones, continuam sendo utilizados. Não envie o ZIP fechado como página do site. A pasta tests e este documento são opcionais para a hospedagem.
+1. Extraia o ZIP.
+2. Na raiz do repositório, substitua somente `index.html` e `sw.js` pelos arquivos deste pacote e confirme o commit.
+3. Aguarde a publicação pelo mecanismo de hospedagem já utilizado no projeto e recarregue o app.
 
-A conexão GitHub consultada permanece somente leitura; esta atualização ainda não foi enviada automaticamente nem publicada. Depois do envio, aguarde a publicação da hospedagem e recarregue o aplicativo.
+Não substitua seus ícones, manifest.json ou pwa.js. Este pacote utiliza esses arquivos já existentes no repositório. Os testes e este documento são opcionais para a publicação.
 
-## Indicadores
+O pacote não contém dados de demonstração. Os cadastros existentes permanecem na mesma base de dados. A conexão GitHub disponível nesta sessão permite apenas leitura; esta atualização ainda não foi publicada no repositório.
 
-- Saldo atual: cálculo de caixa existente, com entradas recebidas e saídas pagas.
-- Contratos ativos: quantidade e valores já calculados pelo aplicativo.
-- A receber — total: contas pendentes de todos os meses, incluindo vencidas e futuras.
-- Despesas — total: todas as despesas cadastradas, pagas e pendentes, incluindo pró-labore, com divisão dos valores abaixo. Movimentações manuais de caixa continuam afetando o saldo, sem serem contadas novamente como despesas cadastradas.
-- Resumo do mês: começa automaticamente no mês atual do aparelho. Os botões anterior/próximo, o campo de mês/ano e o botão Mês atual alteram somente os dois indicadores mensais.
-- A receber no mês: contas ainda não recebidas com vencimento no mês selecionado; valores já recebidos são excluídos.
-- Despesas do mês: pagas e pendentes com vencimento no mês selecionado, com detalhamento de quanto foi pago e quanto falta pagar.
+## Painel de cada cliente
 
-Os cálculos mensais usam vencimento e não data de pagamento. Os meses futuros mostram lançamentos já cadastrados; não criam cobranças ou despesas recorrentes automaticamente. Lançamentos sem vencimento válido entram nos totais gerais e geram um aviso de exclusão do resumo mensal.
+- Logo e nome no cabeçalho; use Cadastro e logo para alterá-los.
+- Situação, descrição, data de início e previsão: clique no status do projeto.
+- Progresso geral e por grupo calculados pelas tarefas concluídas. Tarefas canceladas ficam separadas e não entram no denominador.
+- Escopo e Tarefas: adicionar, editar e remover grupos e tarefas, marcar conclusão, alterar status, buscar títulos e filtrar por situação.
+- As tarefas anteriores aparecem em Sem grupo; basta editá-las e escolher um grupo. Remover um grupo mantém suas tarefas em Sem grupo.
+- Cronograma: usa as mesmas tarefas do calendário interativo. Alterações de data e status são compartilhadas. Inclui navegação mensal, arrastar para remarcar, importação em texto e exportação do cronograma em PDF.
+- Equipe: adicionar, editar e remover pessoas e definir responsáveis pelas tarefas. É um cadastro interno, sem envio de convites e sem criação de contas de acesso.
+- Arquivos: anexar, baixar, editar e remover. Limite de 5 MB por arquivo e 15 MB de anexos por cliente.
+- Links: cadastrar e abrir pastas ou arquivos do Google Drive e outros endereços HTTP/HTTPS. O acesso ao Drive segue as permissões do próprio link; não é uma sincronização com a conta Google.
+- Observações: briefing e orientações persistentes por cliente.
+- Financeiro: recebimentos, despesas, contratos e geração de cobrança preservados.
+
+As alterações utilizam a sincronização existente do aplicativo e o cache local. O aviso no rodapé indica o estado da conexão. Os testes usaram dados isolados, sem gravar na base de produção.
 
 ## Validação
 
-12 testes automatizados aprovados: separação por mês/ano, centavos, contas recebidas, despesas pagas/pendentes, virada de ano, meses sem dados, datas inválidas e preservação dos registros. Execute com Node: `node --test tests/dashboard.test.cjs`.
+24 testes automatizados aprovados, incluindo regressão do resumo financeiro mensal, progresso, isolamento por cliente, tarefas, exclusão de grupos/pessoas, links e limites dos anexos.
 
-Troca de mês e retorno ao mês atual também conferidos no navegador; layout verificado em desktop e em janela de 390 px, com dados fictícios e sem acessar ou modificar a base financeira real. Login e sincronização existentes foram preservados.
+Teste pela interface: criação de grupo, equipe e tarefa; conclusão e progresso; calendário; link; envio e download de arquivo; observações; persistência após recarregar; layout desktop e celular.
+
+Para executar os testes: `node --test tests/*.test.cjs`.
+
+Base da atualização: index.html com SHA e630c9ff751baa533db4d1b31b3b7ead7bf5825e. Cache do aplicativo atualizado para v89.
