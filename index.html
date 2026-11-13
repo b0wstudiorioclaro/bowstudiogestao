@@ -1466,70 +1466,60 @@ function renderContractButtonHtml(c){
   return `<button type="button" class="text-link" style="color:var(--muted);font-size:11px" onclick="openModal('client', ${c.id})">＋ Anexar PDF</button>`;
 }
 
-// IMPORTADOR DE CRONOGRAMA EM LOTE NO QUADRO DO CLIENTE
+// IMPORTADOR DE CRONOGRAMA EM LOTE
+function scheduleCategory(text,client) {
+ const t=normStr(text), scope=normStr(client.service+' '+(client.project?.description||''));
+ if(/stories|story|feed|reels|carrossel|postagem|social media/.test(t))return 'Social Media';
+ if(/landing|\blp\b/.test(t))return 'Landing Page';
+ if(/identidade|logotipo|logo|branding|manual de marca/.test(t))return 'Identidade Visual';
+ if(/website|site|pagina|front.end|back.end/.test(t))return 'Website';
+ if(/social|stories|feed/.test(scope))return 'Social Media';
+ if(/landing|\blp\b/.test(scope))return 'Landing Page';
+ if(/identidade|branding|logo/.test(scope))return 'Identidade Visual';
+ return 'Escopo do projeto';
+}
+function parseProjectSchedule(raw,baseYear,c) {
+ const entries=[],invalid=[];let year=baseYear,previousMonth=null;
+ raw.split(/\r?\n/).forEach((line,i)=>{
+  if(!line.trim())return;
+  const m=line.trim().match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}|\d{2}))?\s*[-–—:]\s*(.+)$/);
+  if(!m){invalid.push(i+1);return;}
+  const day=+m[1],month=+m[2];let y=m[3]?+m[3]:year;if(y<100)y+=2000;
+  if(!m[3]&&previousMonth===12&&month===1)y++;
+  const date=new Date(y,month-1,day);
+  if(date.getFullYear()!==y||date.getMonth()!==month-1||date.getDate()!==day){invalid.push(i+1);return;}
+  const times=[];let bad=false;
+  for(const x of m[4].matchAll(/\b(\d{1,2})(?:h(?:(\d{2})(?!\d))?|:(\d{2}))(?!\w)/gi)){
+   const h=+x[1],min=+(x[2]||x[3]||0);if(h>23||min>59){bad=true;break;}
+   times.push(String(h).padStart(2,'0')+':'+String(min).padStart(2,'0'));
+  }
+  if(bad){invalid.push(i+1);return;}
+  year=y;previousMonth=month;
+  const type=m[4].match(/^(Stories?|Feed|Reels?|Carrossel(?: de fotos)?)/i)?.[1]||'';
+  for(const time of [...new Set(times.length?times:[''])])entries.push({title:m[4].trim(),date:`${y}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`,time,contentType:type,category:scheduleCategory(m[4],c),notes:'Importado via Cronograma: '+line.trim()});
+ });return {entries,invalid};
+}
 async function processClientBulkSchedule(clientId){
-  const c = (db.clients || []).find(x => Number(x.id) === Number(clientId));
-  if(!c) return;
-  const textarea = document.getElementById('bulkScheduleTextarea');
-  if(!textarea) return;
-  const rawText = textarea.value.trim();
-  if(!rawText){
-    alert('Cole o cronograma de demandas na caixa de texto antes de processar.');
-    return;
-  }
-
-  const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-  let addedCount = 0;
-  let firstParsedDate = null;
-
-  db.services = db.services || [];
-  if(!db.nextIds) db.nextIds = {client:60,income:60,expense:60,service:60,partner:60,cash:60};
-  const baseYear = clientHubCalendarDate ? clientHubCalendarDate.getFullYear() : today.getFullYear();
-
-  lines.forEach(line => {
-    const match = line.match(/^(\d{1,2})\s*[\/\-]\s*(\d{1,2})(?:\s*[\/\-]\s*(\d{2,4}))?\s*(?:[-–—:•]\s*|\s+)(.+)$/);
-    if(!match) return;
-    const day = parseInt(match[1], 10);
-    const month = parseInt(match[2], 10);
-    let year = match[3] ? parseInt(match[3], 10) : baseYear;
-    if(year < 100) year += 2000;
-    if(month < 1 || month > 12 || day < 1 || day > 31) return;
-
-    const restText = match[4].trim();
-    if(!restText) return;
-
-    let extractedTime = '';
-    const timeMatch = restText.match(/(?:[aàá]s\s*)?(\d{1,2})\s*(?:h|:)\s*(\d{2})?/i);
-    if(timeMatch){
-      const hh = parseInt(timeMatch[1], 10);
-      const mm = timeMatch[2] ? parseInt(timeMatch[2], 10) : 0;
-      if(hh >= 0 && hh <= 23 && mm >= 0 && mm <= 59){
-        extractedTime = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
-      }
-    }
-
-    const dateIso = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    if(!firstParsedDate) firstParsedDate = new Date(year, month - 1, 1);
-
-    const newId = (db.nextIds.service || 60) + 1;
-    db.nextIds.service = newId;
-    db.services.push({
-      id: newId, title: restText, client: c.name, clientId: c.id, date: dateIso,
-      time: extractedTime, status: 'Agendado', notes: `Importado via Cronograma: ${line}`
-    });
-    addedCount++;
-  });
-
-  if(addedCount === 0){
-    alert('Nenhuma linha com data no formato DD/MM foi encontrada. Exemplo válido:\n28/10 - Stories (Novo Mascote)');
-    return;
-  }
-
-  if(firstParsedDate) clientHubCalendarDate = firstParsedDate;
-  textarea.value = '';
-  render();
-  await saveData('services');
-  showToast(`${addedCount} demanda(s) agendada(s) para ${c.name}!`);
+ if(projectSaving)return;
+ const c=db.clients.find(c=>Number(c.id)===Number(clientId)),textarea=document.getElementById('bulkScheduleTextarea');if(!c||!textarea)return;
+ const year=Number(document.getElementById('bulkScheduleYear').value);
+ if(!Number.isInteger(year)||year<1900||year>9999){alert('Informe um ano válido.');return;}
+ const parsed=parseProjectSchedule(textarea.value,year,c);
+ if(parsed.invalid.length){alert('Revise as linhas '+parsed.invalid.join(', ')+'. Use DD/MM - Conteúdo, com data e horário válidos. Nenhuma tarefa foi criada.');return;}
+ if(!parsed.entries.length){alert('Cole o cronograma antes de gerar.');return;}
+ const p=projectData(c),selected=document.getElementById('bulkScheduleGroup').value;
+ db.services=db.services||[];db.nextIds=db.nextIds||{};let added=0;
+ for(const entry of parsed.entries){
+  if(projectTasks(c).some(t=>t.date===entry.date&&(t.time||'')===entry.time&&normStr(t.title)===normStr(entry.title)))continue;
+  let group=p.groups.find(g=>g.id===selected);
+  if(!group){group=p.groups.find(g=>normStr(g.title)===normStr(entry.category)||normStr(g.title).includes(normStr(entry.category)));if(!group){group={id:projectUid(),title:entry.category};p.groups.push(group);}}
+  const id=Math.max(Number(db.nextIds.service)||60,...db.services.map(t=>Number(t.id)||0))+1;db.nextIds.service=id;
+  db.services.push({...entry,id,projectGroupId:group.id,client:c.name,clientId:c.id,status:'Agendado'});added++;
+ }
+ if(!added){alert('Essas tarefas já estão no cronograma. Nenhuma duplicata foi criada.');return;}
+ c.project=p;textarea.value='';projectViewState(c).bulk='';
+ const first=parsed.entries[0].date.split('-').map(Number);clientHubCalendarDate=new Date(first[0],first[1]-1,1);
+ await persistProject(['clients','services']);showToast(added+' tarefas criadas no cronograma e nos grupos de escopo.');
 }
 
 function changeClientHubMonth(delta){
@@ -1683,10 +1673,11 @@ function projectScopeHtml(c,p,tasks,ui) {
 }
 function projectCalendarHtml(c,tasks) {
   return `<section class="pj-card"><div class="pj-section-heading"><div><h3>Cronograma</h3><p>O mesmo calendário de demandas da agência. Arraste para remarcar ou edite a data.</p></div>${projectAction('calendar-pdf','Exportar PDF')}</div>
+  <div class="pj-bulk" style="margin:0 0 24px;padding:18px;background:#f4f5f7;border-radius:12px"><h3>Gerador de cronograma</h3><p>Cole uma entrega por linha. Reconhece Stories, Feed, Carrossel e Reels. Dois horários geram duas tarefas, mantendo o texto completo.</p><div class="pj-actions"><label>Ano <input id="bulkScheduleYear" type="number" min="1900" max="9999" value="${clientHubCalendarDate.getFullYear()}" style="width:90px"></label><label>Grupo <select id="bulkScheduleGroup"><option value="">Reconhecer automaticamente</option>${projectData(c).groups.map(g=>`<option value="${esc(g.id)}">${esc(g.title)}</option>`).join('')}</select></label></div><p>Sem ano na mensagem, usa o ano acima. Na passagem de dezembro para janeiro, avança o ano. Você pode escolher um grupo ou deixar reconhecer pelo conteúdo e escopo do cliente.</p><label for="bulkScheduleTextarea">Mensagem com o cronograma</label><textarea id="bulkScheduleTextarea" placeholder="28/10 - Stories (Novo Mascote) às 12h e às 18h&#10;29/10 - Feed (Promoção)">${esc(projectViewState(c).bulk||'')}</textarea>${projectAction('bulk','Gerar tarefas e cronograma','','pj-primary')}</div>
   <div class="pj-calendar-tools">${projectAction('prev-month','←','','pj-icon-button')}<strong>${esc(clientHubCalendarDate.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}))}</strong>${projectAction('next-month','→','','pj-icon-button')}${projectAction('today','Mês atual')}${projectAction('add-task','+ Nova tarefa','','pj-primary')}</div>
   <div class="calendar-scroll-wrap"><div class="calendar-grid">${buildCalendarGridHtml(clientHubCalendarDate,tasks,c.name)}</div></div>
   ${tasks.some(t=>!t.date)?`<p class="pj-helper">${tasks.filter(t=>!t.date).length} tarefa(s) sem data. Defina o vencimento em Escopo e Tarefas para exibi-las no calendário.</p>`:''}
-  <details class="pj-bulk"><summary>Importar cronograma em texto</summary><p>Uma entrega por linha, no formato DD/MM/AAAA - Título.</p><textarea id="bulkScheduleTextarea" placeholder="20/11/2026 - Aprovação da identidade visual">${esc(projectViewState(c).bulk||'')}</textarea>${projectAction('bulk','Importar e agendar','','pj-primary')}</details></section>`;
+</section>`;
 }
 function projectFilesHtml(c,p) {
   return `<section class="pj-card"><div class="pj-section-heading"><div><h3>Arquivos e links</h3><p>Anexe arquivos ou guarde links de pastas do Google Drive.</p></div><div class="pj-actions">${projectAction('add-file',projectIcon('plus')+' Arquivo')}${projectAction('add-link',projectIcon('link')+' Link / Drive','','pj-primary')}</div></div>
@@ -1733,7 +1724,7 @@ function openProjectEditor(kind,id=null,date='',group='') {
     body=projectInput('Título do grupo','title','text',item.title||'','required maxlength="120"')+projectInput('Início da etapa','startDate','date',item.startDate||'')+projectInput('Previsão da etapa','endDate','date',item.endDate||'');
   } else if(kind==='member') {
     item=p.team.find(m=>m.id===id)||{};title=id?'Editar pessoa':'Adicionar pessoa à equipe';
-    body=projectInput('Nome','name','text',item.name||'','required maxlength="120"')+projectInput('Função','role','text',item.role||'','maxlength="120"')+projectInput('E-mail (opcional)','email','email',item.email||'')+'<p class="pj-helper pj-full">Cadastro interno. Nenhum convite ou e-mail será enviado.</p>';
+    body=projectSelect('Escolher em Pró-labore','partnerId',[['','Cadastrar manualmente'],...(db.partners||[]).map(x=>[x.id,x.name+' — '+(x.role||'Sócio')])],item.partnerId||'')+projectInput('Nome','name','text',item.name||'','required maxlength="120"')+projectInput('Função','role','text',item.role||'','maxlength="120"')+projectInput('E-mail (opcional)','email','email',item.email||'')+'<p class="pj-helper pj-full">Cadastro interno. Nenhum convite ou e-mail será enviado.</p>';
   } else if(kind==='file'||kind==='link') {
     item=p.files.find(f=>f.id===id)||{};if(item.url)kind='link';title=id?'Editar arquivo / link':kind==='link'?'Adicionar link ou pasta do Drive':'Adicionar arquivo';
     body=projectInput('Nome / título','name','text',item.name||'','required maxlength="200"')+(kind==='link'?projectInput('URL da pasta ou arquivo','url','url',item.url||'','required placeholder="https://drive.google.com/…"'):`<label class="pj-field pj-full"><span>Arquivo (até 5 MB)</span><input name="attachment" type="file" ${id?'':'required'}></label>`);
@@ -1777,6 +1768,7 @@ async function submitProjectEditor(event) {
       }
       collection='services';
     } else if(editor.kind==='group'||editor.kind==='member') {
+      if(editor.kind==='member'&&data.partnerId&&p.team.some(m=>String(m.partnerId)===String(data.partnerId)&&m.id!==old))throw Error('Esta pessoa já está na equipe.');
       const key=editor.kind==='group'?'groups':'team',idx=p[key].findIndex(x=>x.id===old);
       const entry={...data,id:old||projectUid()};if(idx>=0)p[key][idx]={...p[key][idx],...entry};else p[key].push(entry);
       c.project=p;
@@ -1826,6 +1818,11 @@ function downloadProjectFile(id) {
     const a=document.createElement('a');a.href=url;a.download=f.fileName||f.name||'arquivo';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
   }catch(_){showToast('Não foi possível baixar este arquivo.');}
 }
+document.getElementById('projectEditorForm').addEventListener('change',event=>{
+ if(event.target.name!=='partnerId')return;
+ const p=(db.partners||[]).find(p=>String(p.id)===event.target.value);if(!p)return;
+ const form=event.currentTarget;form.elements.name.value=p.name||'';form.elements.role.value=p.role||'';form.elements.email.value=p.email||'';
+});
 document.getElementById('projectEditorForm').addEventListener('submit',submitProjectEditor);
 document.getElementById('projectEditorCancel').onclick=()=>{if(!projectSaving)document.getElementById('projectEditorDialog').close();};
 document.getElementById('projectEditorDialog').addEventListener('cancel',e=>{if(projectSaving)e.preventDefault();});
@@ -3289,7 +3286,7 @@ document.getElementById('importInput').addEventListener('change', e => {
 
   window.pullFromCloud = async function(forceFull = false) {
     const bulkInputFocused = document.activeElement && document.activeElement.id === 'bulkScheduleTextarea';
-    if(isSaving || isFetchingCloud || projectSaving || document.getElementById('projectEditorDialog')?.open || document.activeElement?.id === 'projectTaskSearch' || bulkInputFocused ||
+    if(isSaving || isFetchingCloud || projectSaving || document.getElementById('projectEditorDialog')?.open || ['projectTaskSearch','bulkScheduleYear','bulkScheduleGroup'].includes(document.activeElement?.id) || bulkInputFocused ||
        document.getElementById('modalBackdrop')?.classList.contains('open') ||
        document.getElementById('settingsBackdrop')?.classList.contains('open') ||
        document.getElementById('contractViewBackdrop')?.classList.contains('open') ||
@@ -3369,6 +3366,7 @@ render();
 </script>
 </body>
 </html>
+
 
 
 

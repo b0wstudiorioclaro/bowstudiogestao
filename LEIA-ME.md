@@ -37,3 +37,11 @@ Teste pela interface: criação de grupo, equipe e tarefa; conclusão e progress
 Para executar os testes: `node --test tests/*.test.cjs`.
 
 Base da atualização: index.html com SHA e630c9ff751baa533db4d1b31b3b7ead7bf5825e. Cache do aplicativo atualizado para v89.
+
+## Atualização do gerador e equipe
+
+Gerador aberto acima do calendário: aceita DD/MM ou DD/MM/AAAA, reconhece os formatos de conteúdo, cria uma tarefa por horário e evita duplicatas de mesmo título/data/horário. O ano padrão é editável. Linhas inválidas são indicadas antes de importar qualquer tarefa. O grupo é reconhecido pelo conteúdo e escopo do cliente ou selecionado manualmente; grupos ausentes são criados automaticamente. O texto completo é preservado para não perder instruções.
+
+Equipe: o formulário permite escolher um integrante de Pró-labore e preencher nome/função/e-mail disponíveis, ou cadastrar manualmente. Isso não gera pagamentos.
+
+Esta revisão usa cache v90 e passou em 27 testes automatizados. A publicação continua pendente de envio de index.html e sw.js ao repositório.

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bow-studio-pwa-v89';
+const CACHE_NAME = 'bow-studio-pwa-v90';
 const APP_FILES = [
   './index.html', './pwa.js', './manifest.json', './icon-five.png',
   './icone-app-192.png', './icone-app-512.png'
