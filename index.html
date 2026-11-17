@@ -770,7 +770,7 @@ td:first-child, th:first-child { padding-left: 0; }
         <button class="btn btn-primary btn-small" onclick="openModal('service')">＋ Nova Demanda</button>
       </div>
     </div>
-    <div class="client-subfilter-bar" id="demandClientFilterBar"></div>
+    <div class="client-subfilter-bar" id="demandClientFilterBar"></div><div id="demandPartnerBar" class="pj-actions" style="margin:16px 0" aria-label="Demandas por responsável"></div><div id="partnerDemandPanel" hidden></div>
     <div class="table-wrap">
       <table>
         <thead>
@@ -1585,7 +1585,7 @@ function renderTopClientSwitcherBar(){
       <span class="client-hub-mini-dot">&#x25EB;&#xFE0E;</span><span>Visão Geral Agência</span>
     </button>
   `;
-  clients.forEach(c => {
+  clients.filter(c=>c.status==='Ativo').forEach(c => {
     const isAct = currentView === 'client-hub' && Number(activeHubClientId) === Number(c.id);
     const dotHtml = c.logoData
       ? `<span class="client-hub-mini-dot has-logo"><img src="${esc(c.logoData)}" alt="${esc(c.name)}"></span>`
@@ -1648,7 +1648,7 @@ function projectIcon(name) {
 }
 function projectAction(action,label,id='',cls='') { return `<button aria-label="${esc(({'edit-file':'Editar arquivo ou link','edit-member':'Editar pessoa'})[action] || label.replace(/<[^>]*>/g,''))}" type="button" class="pj-button ${cls}" data-pj="${action}" data-id="${esc(id)}">${label}</button>`; }
 function projectTaskRow(t,p) {
-  const member = p.team.find(m => m.id === t.assigneeId);
+  const member = demandPartnerName(t)?{name:demandPartnerName(t)}:p.team.find(m => m.id === t.assigneeId);
   return `<div class="pj-task ${t.status==='Concluído'?'is-done':''}">
     <input type="checkbox" aria-label="Concluir ${esc(t.title)}" data-pj-check="${t.id}" ${t.status==='Concluído'?'checked':''} ${projectSaving?'disabled':''}>
     <button type="button" class="pj-task-name" data-pj="edit-task" data-id="${t.id}">${esc(t.title)}<small>${t.date ? prettyDate(t.date) : 'Sem data'}${member ? ` · ${esc(member.name)}` : ''}</small></button>
@@ -1699,7 +1699,7 @@ function renderClientHubView() {
   let content=ui.tab==='calendar'?projectCalendarHtml(c,tasks):ui.tab==='files'?projectFilesHtml(c,p):ui.tab==='team'?projectTeamHtml(p):ui.tab==='notes'?`<section class="pj-card"><div class="pj-section-heading"><div><h3>Observações do projeto</h3><p>Briefing, decisões e orientações para a equipe.</p></div>${projectAction('edit-notes','Editar observações','','pj-primary')}</div><div class="pj-notes">${esc(p.notes||'Nenhuma observação adicionada.')}</div></section>`:ui.tab==='finance'?projectFinancialHtml(c):projectScopeHtml(c,p,tasks,ui);
   container.innerHTML=`<div class="pj-workspace"><div class="pj-breadcrumb"><button type="button" data-pj="back">Clientes</button><span>›</span><strong>${esc(c.name)}</strong><div class="pj-actions">${projectAction('edit-client','Cadastro e logo')}${projectAction('add-task',projectIcon('plus')+' Nova tarefa','','pj-primary')}</div></div>
   <div class="pj-layout"><main class="pj-main"><section class="pj-card pj-hero"><div class="pj-identity"><div class="pj-client-logo">${c.logoData?`<img src="${esc(c.logoData)}" alt="Logo de ${esc(c.name)}">`:esc(initials(c.name))}</div><div class="pj-client-title"><span class="pj-kicker">${esc(c.clientCategory==='Projeto'?'Projeto estratégico':'Projeto do cliente')}</span><h2>${esc(c.name)}</h2><p>${esc(p.description||c.service||'Defina o escopo e organize as entregas do projeto.')}</p><div class="pj-dates"><span>${projectIcon('calendar')} Início: ${prettyDate(p.startDate||c.startDate)}</span><span>${projectIcon('calendar')} Previsão: ${prettyDate(p.endDate)}</span></div></div><button type="button" class="pj-status" data-pj="edit-project">● ${esc(status)} ${projectIcon('chevron')}</button></div>
-  <div class="pj-progress"><div><small>Progresso geral do projeto</small><strong>${st.percent}%</strong></div><div class="pj-track" role="progressbar" aria-label="Progresso do projeto" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${st.percent}"><span style="width:${st.percent}%"></span></div><span>${st.done} de ${st.total} tarefas concluídas</span></div></section>
+  <div class="pj-progress" style="${showClientProgress(c)?'':'display:none'}"><div><small>Progresso geral do projeto</small><strong>${st.percent}%</strong></div><div class="pj-track" role="progressbar" aria-label="Progresso do projeto" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${st.percent}"><span style="width:${st.percent}%"></span></div><span>${st.done} de ${st.total} tarefas concluídas</span></div></section>
   <nav class="pj-tabs" aria-label="Seções do projeto">${tabs.map(([id,icon,label])=>`<button type="button" data-pj="tab" data-id="${id}" aria-current="${ui.tab===id?'page':'false'}" class="${ui.tab===id?'active':''}">${projectIcon(icon)}${label}</button>`).join('')}</nav><div class="pj-content">${content}</div></main>
   <aside class="pj-aside"><section class="pj-card"><h3>${projectIcon('chart')} Resumo do Projeto</h3><dl class="pj-summary"><div><dt>Tarefas totais</dt><dd>${st.total}</dd></div><div><dt>Concluídas</dt><dd>${st.done}</dd></div><div><dt>Em andamento</dt><dd>${st.doing}</dd></div><div><dt>Pendentes</dt><dd>${st.pending}</dd></div>${st.canceled?`<div><dt>Canceladas</dt><dd>${st.canceled}</dd></div>`:''}</dl></section>
   <section class="pj-card"><h3>${projectIcon('calendar')} Cronograma principal</h3><div class="pj-timeline">${p.groups.map(g=>{
@@ -1718,7 +1718,7 @@ function openProjectEditor(kind,id=null,date='',group='') {
   if(kind==='task') {
     item=projectTasks(c).find(t=>String(t.id)===String(id))||{};
     title=id?'Editar tarefa':'Nova tarefa';
-    body=projectInput('Título da tarefa','title','text',item.title||'','required maxlength="200"')+projectSelect('Grupo de escopo','projectGroupId',[['','Sem grupo'],...p.groups.map(g=>[g.id,g.title])],item.projectGroupId||group)+projectInput('Data de vencimento','date','date',item.date||date)+projectInput('Horário','time','time',item.time||'')+projectSelect('Status','status',[['Agendado','Pendente'],['Em andamento','Em andamento'],['Concluído','Concluída'],['Cancelado','Cancelada']],item.status||'Agendado')+projectSelect('Responsável','assigneeId',[['','Sem responsável'],...p.team.map(m=>[m.id,m.name])],item.assigneeId||'')+`<label class="pj-field pj-full"><span>Descrição / briefing</span><textarea name="notes">${esc(item.notes||'')}</textarea></label>`;
+    body=projectInput('Título da tarefa','title','text',item.title||'','required maxlength="200"')+projectSelect('Grupo de escopo','projectGroupId',[['','Sem grupo'],...p.groups.map(g=>[g.id,g.title])],item.projectGroupId||group)+projectInput('Data de vencimento','date','date',item.date||date)+projectInput('Horário','time','time',item.time||'')+projectSelect('Status','status',[['Agendado','Pendente'],['Em andamento','Em andamento'],['Concluído','Concluída'],['Cancelado','Cancelada']],item.status||'Agendado')+responsibleField(item)+projectSelect('Integrante da equipe (opcional)','assigneeId',[['','Sem responsável'],...p.team.map(m=>[m.id,m.name])],item.assigneeId||'')+`<label class="pj-field pj-full"><span>Descrição / briefing</span><textarea name="notes">${esc(item.notes||'')}</textarea></label>`;
   } else if(kind==='group') {
     item=p.groups.find(g=>g.id===id)||{};title=id?'Editar grupo':'Novo grupo de escopo';
     body=projectInput('Título do grupo','title','text',item.title||'','required maxlength="120"')+projectInput('Início da etapa','startDate','date',item.startDate||'')+projectInput('Previsão da etapa','endDate','date',item.endDate||'');
@@ -1760,6 +1760,7 @@ async function submitProjectEditor(event) {
       if(old&&!existing)throw Error('Esta tarefa não está mais disponível.');
       if(data.projectGroupId&&!p.groups.some(g=>g.id===data.projectGroupId))throw Error('O grupo não está mais disponível.');
       if(data.assigneeId&&!p.team.some(m=>m.id===data.assigneeId))data.assigneeId='';
+      if(!data.responsiblePartnerId&&data.assigneeId)data.responsiblePartnerId=String(p.team.find(m=>m.id===data.assigneeId)?.partnerId||'');
       if(existing)Object.assign(existing,data,{client:c.name,clientId:c.id});
       else {
         db.services=db.services||[];db.nextIds=db.nextIds||{};
@@ -2413,7 +2414,7 @@ function render(){
 
   renderDashboardDemands();
 
-  document.getElementById('recentClients').innerHTML = clients.slice(-4).reverse().map(c=>`
+  document.getElementById('recentClients').innerHTML = clients.filter(c=>c.status==='Ativo').slice(-4).reverse().map(c=>`
     <tr style="cursor:pointer" onclick="openClientHub(${c.id})">
       <td>
         <div class="client-cell">
@@ -2525,7 +2526,7 @@ function renderPartnersDashboard(partners, expenses){
         <div class="partner-card-top">
           <div class="partner-avatar">${avatarHtml}</div>
           <div class="partner-info" style="flex:1;min-width:0"><h3>${esc(p.name)}</h3><div class="partner-role">${esc(p.role || 'Sócio')}</div></div>
-          <button class="text-link text-danger" onclick="deleteItem('partner', ${p.id})">×</button>
+          <button class="btn btn-light btn-small" onclick="openModal('partner', ${p.id})">Editar perfil</button><button class="text-link text-danger" onclick="deleteItem('partner', ${p.id})">×</button>
         </div>
         <div class="partner-meta-list">
           <div class="partner-meta-row"><span>Competências</span><strong>${esc(p.skills || 'Gestão & Criação')}</strong></div>
@@ -2570,7 +2571,7 @@ function renderPartnersDashboard(partners, expenses){
 }
 
 function renderDashboardDemands(){
-  const services = (db.services || []).filter(s=>s.status!=='Concluído');
+  const services = (db.services || []).filter(s=>s.status!=='Concluído' && (db.clients||[]).some(c=>c.status==='Ativo' && belongsToProject(s,c)));
   let filtered = services;
   if(dashboardDemandScope === 'today') filtered = services.filter(s => s.date === iso(today));
   else if(dashboardDemandScope === 'week'){
@@ -2640,7 +2641,7 @@ function renderSingleDemandRow(s){
   return `
     <tr class="demand-row" onclick="openDemandDetails(${s.id})">
       <td><span class="alert-tag ${dead.css}">${dead.label}</span></td>
-      <td>${previewIcon}<b>${esc(s.title)}</b></td>
+      <td>${previewIcon}<b>${esc(s.title)}</b><div class="sub">Responsável: ${esc(demandPartnerName(s)||'Sem responsável')}</div></td>
       <td><b>${esc(s.client)}</b></td>
       <td>${prettyDate(s.date)}</td>
       <td>${esc(s.time || '—')}</td>
@@ -2654,6 +2655,29 @@ function renderSingleDemandRow(s){
   `;
 }
 
+
+let selectedDemandPartner='all';
+function showClientProgress(c){return c.showProgress==='yes'||(c.showProgress!=='no'&&c.clientCategory==='Projeto');}
+function demandPartnerId(t){
+ if(Object.prototype.hasOwnProperty.call(t,'responsiblePartnerId'))return String(t.responsiblePartnerId||'');
+ const c=(db.clients||[]).find(c=>belongsToProject(t,c));
+ return String(c&&projectData(c).team.find(m=>m.id===t.assigneeId)?.partnerId||'');
+}
+function demandPartnerName(t){const id=demandPartnerId(t);return (db.partners||[]).find(p=>String(p.id)===id)?.name||'';}
+function responsibleField(t){return projectSelect('Responsável de Pró-labore','responsiblePartnerId',[['','Sem responsável'],...(db.partners||[]).map(p=>[p.id,p.name])],demandPartnerId(t));}
+function selectDemandPartner(id){selectedDemandPartner=String(id);renderDemandsTable();}
+function renderPartnerDemands(tasks){
+ const bar=document.getElementById('demandPartnerBar'),panel=document.getElementById('partnerDemandPanel');
+ if(selectedDemandPartner!=='all'&&selectedDemandPartner!==''&&!(db.partners||[]).some(p=>String(p.id)===selectedDemandPartner))selectedDemandPartner='all';
+ const choices=[{id:'all',name:'Todos os responsáveis'},...(db.partners||[]),{id:'',name:'Sem responsável'}];
+ bar.innerHTML=choices.map(p=>`<button type="button" class="filter-btn ${String(p.id)===selectedDemandPartner?'active':''}" data-partner-filter="${esc(p.id)}">${esc(p.name)} (${(db.services||[]).filter(t=>p.id==='all'||demandPartnerId(t)===String(p.id)).length})</button>`).join('');
+ const active=selectedDemandPartner!=='all';document.getElementById('demandsTable').closest('.table-wrap').hidden=active;
+ panel.hidden=!active;if(!active)return;
+ const grouped=new Map();tasks.filter(t=>demandPartnerId(t)===selectedDemandPartner).forEach(t=>{const name=t.client||'Sem cliente';if(!grouped.has(name))grouped.set(name,[]);grouped.get(name).push(t);});
+ panel.innerHTML=[...grouped].map(([name,list])=>`<details class="pj-group" open><summary><strong>${esc(name)}</strong><span>${list.length} demanda(s)</span></summary><div class="table-wrap"><table><thead><tr><th>Prazo</th><th>Demanda</th><th>Cliente</th><th>Data</th><th>Horário</th><th>Status</th><th>Ações</th></tr></thead><tbody>${list.map(renderSingleDemandRow).join('')}</tbody></table></div></details>`).join('')||'<div class="empty">Nenhuma demanda neste filtro.</div>';
+}
+document.getElementById('demandPartnerBar').addEventListener('click',e=>{const b=e.target.closest('[data-partner-filter]');if(b)selectDemandPartner(b.dataset.partnerFilter);});
+
 function renderDemandsTable(){
   if(isClientFilterMode) renderDemandClientFilterButtons();
   const services = db.services || [];
@@ -2661,6 +2685,7 @@ function renderDemandsTable(){
   if(currentDemandFilter !== 'all') filtered = filtered.filter(s => getDeadlineStatus(s.date, s.status).tag === currentDemandFilter);
   if(isClientFilterMode && selectedDemandClient !== 'all') filtered = filtered.filter(s => normStr(s.client) === normStr(selectedDemandClient));
   filtered.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  renderPartnerDemands(filtered);
 
   if(isClientFilterMode && selectedDemandClient === 'all' && filtered.length > 0){
     const groups = {};
@@ -2855,6 +2880,7 @@ function fieldsFor(type, item = {}, presetCategory = null, presetDate = null){
     const hasContract = !!(item.contractPdfData || item.contractPdfUrl);
     const hasLogo = !!item.logoData;
     return field('Nome do Cliente','name','text',{placeholder:'Ex.: Flash Pizzaria', value:item.name||''}) +
+      projectSelect('Mostrar progresso do projeto','showProgress',[['yes','Ativado'],['no','Desativado']],showClientProgress(item)?'yes':'no') +
       field('Tipo de Contrato','clientCategory','select',{options:['Serviço Recorrente (Social Media, Tráfego)','Projeto Pontual (LP, Identidade)'], value:catVal}) +
       `<div class="field full"><label>Logo do Cliente (Painel e Nota A4)</label><input type="file" id="clientLogoFileInput" accept="image/*"><span class="sub" id="clientLogoUploadStatus">${hasLogo ? '✓ Logo cadastrada.' : 'Selecione a logo.'}</span>${hasLogo ? `<label style="display:flex;align-items:center;gap:6px;font-size:12px;margin-top:4px"><input type="checkbox" id="removeClientLogoCheck" style="width:auto"> Remover logo</label>` : ''}</div>` +
       `<div class="field full"><label>Serviço / Escopo (Tags)</label><input type="hidden" id="serviceHiddenInput" name="service" value="${esc(item.service||'')}"><div class="tags-selector-box" id="serviceTagsContainer"></div><div style="display:flex;gap:8px;margin-top:6px"><input type="text" id="newServiceTagInput" placeholder="Nova tag..." onkeydown="if(event.key==='Enter'){event.preventDefault();addNewServiceTag();}"><button type="button" class="btn btn-light btn-small" onclick="addNewServiceTag()">＋ Tag</button></div></div>` +
@@ -2871,6 +2897,7 @@ function fieldsFor(type, item = {}, presetCategory = null, presetDate = null){
     const hasExistingMedia = !!(item.mediaData || item.mediaUrl);
     return field('Título da Demanda / Postagem','title','text',{placeholder:'Ex.: Stories 26 Sabores',full:true, value:item.title||''}) +
       ((db.clients||[]).length || item.client ? clientSelect() : field('Cliente','client','text',{value:item.client||''})) +
+      responsibleField(item) +
       field('Data de Vencimento','date','date',{value:presetDate || item.date || iso(today)}) +
       field('Horário Limite','time','time',{required:false, value:item.time||''}) +
       field('Status','status','select',{options:['Agendado','Em andamento','Concluído','Cancelado'], value:item.status||'Agendado'}) +
@@ -3040,6 +3067,15 @@ document.getElementById('entryForm').addEventListener('submit', async e => {
     d.clientId = client ? client.id : '';
     if(oldTask && client && !belongsToProject(oldTask, client)) { d.projectGroupId = ''; d.assigneeId = ''; }
   }
+  if(type === 'partner' && editingId !== null) {
+    const oldPartner=db.partners.find(p=>Number(p.id)===Number(editingId));
+    if(oldPartner && oldPartner.name!==d.name){
+      (db.expenses||[]).filter(e=>e.category==='Pagamento Pró-labore'&&e.partnerName===oldPartner.name).forEach(e=>e.partnerName=d.name);
+      (db.clients||[]).forEach(c=>{if(c.project){const p=projectData(c);p.team.filter(m=>String(m.partnerId)===String(oldPartner.id)).forEach(m=>{m.name=d.name;m.role=d.role||'';});c.project=p;}});
+      if(selectedPartnerHistoryFilter===oldPartner.name)selectedPartnerHistoryFilter=d.name;
+      saveKeys=['partners','expenses','clients'];
+    }
+  }
   if(type === 'client' && editingId !== null) {
     const oldClient = db.clients.find(c => Number(c.id) === Number(editingId));
     if(oldClient && oldClient.name !== d.name) {
@@ -3137,6 +3173,7 @@ document.getElementById('globalSearch').addEventListener('input', e => {
   if(!q){ render(); return; }
   if(currentView === 'services'){
     const matched = (db.services||[]).filter(s => [s.title, s.client, s.notes, s.status].join(' ').toLowerCase().includes(q));
+    renderPartnerDemands(matched);
     document.getElementById('demandsTable').innerHTML = matched.map(s => renderSingleDemandRow(s)).join('') || '<tr><td colspan="7" class="empty">Nenhuma demanda.</td></tr>';
   } else {
     go('clients');
@@ -3366,6 +3403,7 @@ render();
 </script>
 </body>
 </html>
+
 
 
 
