@@ -1478,26 +1478,91 @@ function scheduleCategory(text,client) {
  if(/identidade|branding|logo/.test(scope))return 'Identidade Visual';
  return 'Escopo do projeto';
 }
-function parseProjectSchedule(raw,baseYear,c) {
- const entries=[],invalid=[];let year=baseYear,previousMonth=null;
- raw.split(/\r?\n/).forEach((line,i)=>{
-  if(!line.trim())return;
-  const m=line.trim().match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}|\d{2}))?\s*[-–—:]\s*(.+)$/);
-  if(!m){invalid.push(i+1);return;}
-  const day=+m[1],month=+m[2];let y=m[3]?+m[3]:year;if(y<100)y+=2000;
-  if(!m[3]&&previousMonth===12&&month===1)y++;
-  const date=new Date(y,month-1,day);
-  if(date.getFullYear()!==y||date.getMonth()!==month-1||date.getDate()!==day){invalid.push(i+1);return;}
-  const times=[];let bad=false;
-  for(const x of m[4].matchAll(/\b(\d{1,2})(?:h(?:(\d{2})(?!\d))?|:(\d{2}))(?!\w)/gi)){
-   const h=+x[1],min=+(x[2]||x[3]||0);if(h>23||min>59){bad=true;break;}
-   times.push(String(h).padStart(2,'0')+':'+String(min).padStart(2,'0'));
+function parseProjectSchedule(raw, baseYear, client) {
+  const entries = [], invalid = [], pending = [];
+  const dateToken = String.raw`\d{1,2}/\d{1,2}(?:/\d{4}|/\d{2}(?!\d))?`;
+  const weekday = String.raw`(?:(?:seg|ter|qua|qui|sex|s[áa]b|dom)(?:unda(?:-feira)?|ça(?:-feira)?|rta(?:-feira)?|nta(?:-feira)?|ta(?:-feira)?|ado|ingo)?\.?\s+)?`;
+  const dateList = new RegExp(`^(${weekday}${dateToken}(?:\\s*(?:,\\s*(?:e\\s+)?|e\\s+)${weekday}${dateToken})*)\\s*[·|•]\\s*(.+)$`, 'i');
+  const legacy = new RegExp(`^(${dateToken})\\s*[-–—:]\\s*(.+)$`);
+  const timeToken = String.raw`\d{1,2}(?:h\d{0,2}|:\d{2})(?!\w)`;
+  const timed = new RegExp(`(?:^|\\s)(?:[aàá]s\\s+)?(${timeToken})\\s*:\\s*`, 'gi');
+  let year = baseYear, previousMonth = null;
+  const range = raw.match(/^\s*\*{0,2}De\s+\d{1,2}\/(\d{1,2})\s+a\s+\d{1,2}\/(\d{1,2})\/(\d{4})\b/im);
+  if (range) year = Number(range[3]) - Number(+range[1] > +range[2]);
+
+  const reviewDays = new Set();
+  for (const line of raw.split(/\r?\n/)) {
+    if (!/confirme o expediente/.test(normStr(line))) continue;
+    for (const match of line.matchAll(/(?:\b(\d{1,2})\s+e\s+)?(\d{1,2})\/(\d{1,2})\b/g)) {
+      for (const day of [match[1], match[2]].filter(Boolean)) reviewDays.add(day.padStart(2, '0') + '/' + match[3].padStart(2, '0'));
+    }
   }
-  if(bad){invalid.push(i+1);return;}
-  year=y;previousMonth=month;
-  const type=m[4].match(/^(Stories?|Feed|Reels?|Carrossel(?: de fotos)?)/i)?.[1]||'';
-  for(const time of [...new Set(times.length?times:[''])])entries.push({title:m[4].trim(),date:`${y}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`,time,contentType:type,category:scheduleCategory(m[4],c),notes:'Importado via Cronograma: '+line.trim()});
- });return {entries,invalid};
+
+  function parseTime(token) {
+    const [hour, minute = ''] = token.toLowerCase().split(/[h:]/);
+    if (+hour > 23 || +minute > 59 || (minute && minute.length !== 2)) return null;
+    return `${hour.padStart(2, '0')}:${(minute || '00')}`;
+  }
+
+  raw.split(/\r?\n/).forEach((line, index) => {
+    const clean = line.trim().replace(/^[-*+]\s+/, '').replace(/\*\*|__/g, '').trim();
+    if (!clean || /^#{1,6}\s/.test(clean) || /^de\s+\d{1,2}\//i.test(clean)) return;
+    const markdownMatch = clean.match(dateList);
+    const match = markdownMatch || clean.match(legacy);
+    if (!match) {
+      // Editorial guidance has no leading date. Report malformed dated rows.
+      if (new RegExp(`^${weekday}\\d{1,2}/`, 'i').test(clean)) invalid.push(index + 1);
+      return;
+    }
+    const dateStrings = [...match[1].matchAll(new RegExp(dateToken, 'g'))].map(m => m[0]);
+    let rowYear = year, rowMonth = previousMonth, bad = false;
+    const dates = dateStrings.map(value => {
+      const [day, month, explicitYear] = value.split('/').map(Number);
+      if (explicitYear !== undefined) rowYear = explicitYear < 100 ? 2000 + explicitYear : explicitYear;
+      else if (rowMonth === 12 && month === 1) rowYear++;
+      rowMonth = month;
+      const date = new Date(rowYear, month - 1, day);
+      if (date.getFullYear() !== rowYear || date.getMonth() !== month - 1 || date.getDate() !== day) bad = true;
+      return `${rowYear}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    });
+    const body = match[2].trim();
+    let slots;
+    if (markdownMatch) {
+      const markers = [...body.matchAll(timed)];
+      if (!markers.length || markers[0].index !== 0) bad = true;
+      slots = markers.map((marker, i) => ({
+        time: parseTime(marker[1]),
+        title: body.slice(marker.index + marker[0].length, markers[i + 1]?.index).trim()
+      }));
+    } else {
+      const times = [...body.matchAll(new RegExp(`\\b${timeToken}`, 'gi'))].map(m => parseTime(m[0]));
+      slots = [...new Set(times.length ? times : [''])].map(time => ({time, title: body}));
+    }
+    if (bad || slots.some(slot => slot.time === null || !slot.title)) {
+      invalid.push(index + 1);
+      return;
+    }
+    year = rowYear;
+    previousMonth = rowMonth;
+    for (const date of dates) {
+      for (const {title, time} of slots) {
+        // A row may cover several days, with only the holiday needing review.
+        const condition = normStr(title);
+        const monthDay = date.slice(5).split('-').reverse().join('/');
+        const conditional = /se (?:a loja )?estiver abert[ao]/.test(condition)
+          || (/atendimento confirmado/.test(condition) && (!reviewDays.size || reviewDays.has(monthDay)));
+        const contentType = title.match(/^(Stories?|Feed|Reels?|Carrossel(?: de fotos)?)/i)?.[1]
+          || (/^repost nos stories/i.test(title) ? 'Stories' : /^arte individual/i.test(title) ? 'Feed' : '');
+        const entry = {
+          title, date, time, contentType,
+          category: contentType ? 'Social Media' : scheduleCategory(title, client),
+          notes: 'Importado via Cronograma: ' + line.trim()
+        };
+        (conditional ? pending : entries).push(entry);
+      }
+    }
+  });
+  return {entries, invalid, pending};
 }
 async function processClientBulkSchedule(clientId){
  if(projectSaving)return;
@@ -1505,8 +1570,13 @@ async function processClientBulkSchedule(clientId){
  const year=Number(document.getElementById('bulkScheduleYear').value);
  if(!Number.isInteger(year)||year<1900||year>9999){alert('Informe um ano válido.');return;}
  const parsed=parseProjectSchedule(textarea.value,year,c);
- if(parsed.invalid.length){alert('Revise as linhas '+parsed.invalid.join(', ')+'. Use DD/MM - Conteúdo, com data e horário válidos. Nenhuma tarefa foi criada.');return;}
- if(!parsed.entries.length){alert('Cole o cronograma antes de gerar.');return;}
+ if(parsed.invalid.length){alert('Revise as linhas '+parsed.invalid.join(', ')+'. Confira as datas e os horários das linhas de programação. Nenhuma tarefa foi criada.');return;}
+ const pendingText = parsed.pending.map(entry => prettyDate(entry.date) + ' às ' + entry.time + ' — ' + entry.title).join('\n');
+ if(!parsed.entries.length){
+   alert(pendingText ? 'Estas postagens dependem de confirmação do expediente:\n' + pendingText : 'Nenhuma linha com data e conteúdo foi encontrada.');
+   return;
+ }
+ if(pendingText && !confirm('Importar as demais tarefas? Estas ficam de fora até confirmar o expediente:\n' + pendingText)) return;
  const p=projectData(c),selected=document.getElementById('bulkScheduleGroup').value;
  db.services=db.services||[];db.nextIds=db.nextIds||{};let added=0;
  for(const entry of parsed.entries){
@@ -1673,7 +1743,7 @@ function projectScopeHtml(c,p,tasks,ui) {
 }
 function projectCalendarHtml(c,tasks) {
   return `<section class="pj-card"><div class="pj-section-heading"><div><h3>Cronograma</h3><p>O mesmo calendário de demandas da agência. Arraste para remarcar ou edite a data.</p></div>${projectAction('calendar-pdf','Exportar PDF')}</div>
-  <div class="pj-bulk" style="margin:0 0 24px;padding:18px;background:#f4f5f7;border-radius:12px"><h3>Gerador de cronograma</h3><p>Cole uma entrega por linha. Reconhece Stories, Feed, Carrossel e Reels. Dois horários geram duas tarefas, mantendo o texto completo.</p><div class="pj-actions"><label>Ano <input id="bulkScheduleYear" type="number" min="1900" max="9999" value="${clientHubCalendarDate.getFullYear()}" style="width:90px"></label><label>Grupo <select id="bulkScheduleGroup"><option value="">Reconhecer automaticamente</option>${projectData(c).groups.map(g=>`<option value="${esc(g.id)}">${esc(g.title)}</option>`).join('')}</select></label></div><p>Sem ano na mensagem, usa o ano acima. Na passagem de dezembro para janeiro, avança o ano. Você pode escolher um grupo ou deixar reconhecer pelo conteúdo e escopo do cliente.</p><label for="bulkScheduleTextarea">Mensagem com o cronograma</label><textarea id="bulkScheduleTextarea" placeholder="28/10 - Stories (Novo Mascote) às 12h e às 18h&#10;29/10 - Feed (Promoção)">${esc(projectViewState(c).bulk||'')}</textarea>${projectAction('bulk','Gerar tarefas e cronograma','','pj-primary')}</div>
+  <div class="pj-bulk" style="margin:0 0 24px;padding:18px;background:#f4f5f7;border-radius:12px"><h3>Gerador de cronograma</h3><p>Cole uma lista simples (28/10 - Stories às 18h) ou um cronograma em Markdown (Seg 30/11, ter 01/12 · 18h: Stories). Cada data e horário vira uma tarefa.</p><div class="pj-actions"><label>Ano <input id="bulkScheduleYear" type="number" min="1900" max="9999" value="${clientHubCalendarDate.getFullYear()}" style="width:90px"></label><label>Grupo <select id="bulkScheduleGroup"><option value="">Reconhecer automaticamente</option>${projectData(c).groups.map(g=>`<option value="${esc(g.id)}">${esc(g.title)}</option>`).join('')}</select></label></div><p>Usa o ano indicado no período do cronograma ou, na ausência dele, o ano acima. Na passagem de dezembro para janeiro, avança o ano. Você pode escolher um grupo ou deixar reconhecer pelo conteúdo e escopo do cliente.</p><label for="bulkScheduleTextarea">Mensagem com o cronograma</label><textarea id="bulkScheduleTextarea" placeholder="28/10 - Stories (Novo Mascote) às 12h e às 18h&#10;29/10 - Feed (Promoção)">${esc(projectViewState(c).bulk||'')}</textarea>${projectAction('bulk','Gerar tarefas e cronograma','','pj-primary')}</div>
   <div class="pj-calendar-tools">${projectAction('prev-month','←','','pj-icon-button')}<strong>${esc(clientHubCalendarDate.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}))}</strong>${projectAction('next-month','→','','pj-icon-button')}${projectAction('today','Mês atual')}${projectAction('add-task','+ Nova tarefa','','pj-primary')}</div>
   <div class="calendar-scroll-wrap"><div class="calendar-grid">${buildCalendarGridHtml(clientHubCalendarDate,tasks,c.name)}</div></div>
   ${tasks.some(t=>!t.date)?`<p class="pj-helper">${tasks.filter(t=>!t.date).length} tarefa(s) sem data. Defina o vencimento em Escopo e Tarefas para exibi-las no calendário.</p>`:''}
@@ -3403,6 +3473,7 @@ render();
 </script>
 </body>
 </html>
+
 
 
 

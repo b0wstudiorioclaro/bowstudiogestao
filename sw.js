@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bow-studio-pwa-v91';
+const CACHE_NAME = 'bow-studio-pwa-v92';
 const APP_FILES = [
   './index.html', './pwa.js', './manifest.json', './icon-five.png',
   './icone-app-192.png', './icone-app-512.png'
@@ -46,6 +46,7 @@ self.addEventListener('fetch', event => {
     }
   })());
 });
+
 
 
 
